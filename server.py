@@ -19,6 +19,9 @@ import datetime
 import html as htmlmod
 import time
 import urllib.parse
+import zipfile
+import xml.etree.ElementTree as ET
+import re
 
 def _urlq(s):
     return urllib.parse.quote(str(s or ""))
@@ -37,7 +40,7 @@ TEST_GROUPS = [
             "duration": 90 * 60,          # 90-minute exams (real CLF-C02 length)
             "tests": [
                 ("AWS Practice Test 1 (Modules 5-8)", "aws-test1.html"),
-                ("AWS Certified Cloud Practitioner - Final Exam (CLF-C02)", "aws-final.html"),
+                ("AWS Certified Cloud Practitioner \u2014 Final Exam (CLF-C02)", "aws-final.html"),
             ],
     },
     {
@@ -199,6 +202,223 @@ def delete_results(selected_test=None):
     n = cur.rowcount
     con.close()
     return n
+
+# ---- spreadsheet import (standard library only: no openpyxl/pandas needed) ----
+def _localname(tag):
+    return tag.split("}", 1)[-1]
+
+def _col_index(cellref):
+    m = re.match(r"([A-Za-z]+)", cellref or "")
+    if not m:
+        return None
+    n = 0
+    for ch in m.group(1).upper():
+        n = n * 26 + (ord(ch) - 64)
+    return n - 1
+
+def read_xlsx(data):
+    """Read the first worksheet of an .xlsx file into a list of row lists.
+    Uses only zipfile + ElementTree, so no third-party packages are needed."""
+    z = zipfile.ZipFile(io.BytesIO(data))
+    names = set(z.namelist())
+
+    shared = []
+    if "xl/sharedStrings.xml" in names:
+        root = ET.fromstring(z.read("xl/sharedStrings.xml"))
+        for si in root:
+            if _localname(si.tag) != "si":
+                continue
+            shared.append("".join(
+                (t.text or "") for t in si.iter() if _localname(t.tag) == "t"))
+
+    # Resolve the first worksheet target (fall back to sheet1.xml).
+    target = "xl/worksheets/sheet1.xml"
+    try:
+        wb = ET.fromstring(z.read("xl/workbook.xml"))
+        sheets = [e for e in wb.iter() if _localname(e.tag) == "sheet"]
+        rid = None
+        if sheets:
+            for k, v in sheets[0].attrib.items():
+                if _localname(k) == "id":
+                    rid = v
+        rels = ET.fromstring(z.read("xl/_rels/workbook.xml.rels"))
+        idmap = {rel.attrib.get("Id"): rel.attrib.get("Target") for rel in rels}
+        tgt = idmap.get(rid)
+        if tgt:
+            tgt = tgt.lstrip("/")
+            target = tgt if tgt.startswith("xl/") else "xl/" + tgt
+    except Exception:
+        pass
+    if target not in names:
+        cands = sorted(n for n in names
+                       if n.startswith("xl/worksheets/") and n.endswith(".xml"))
+        if cands:
+            target = cands[0]
+
+    sheet = ET.fromstring(z.read(target))
+    rows = []
+    for row in sheet.iter():
+        if _localname(row.tag) != "row":
+            continue
+        cells, maxc, seq = {}, -1, 0
+        for c in row:
+            if _localname(c.tag) != "c":
+                continue
+            ci = _col_index(c.attrib.get("r", ""))
+            if ci is None:
+                ci = seq
+            seq = ci + 1
+            t = c.attrib.get("t")
+            if t == "inlineStr":
+                val = "".join((x.text or "") for x in c.iter()
+                              if _localname(x.tag) == "t")
+            else:
+                vtext = ""
+                for x in c:
+                    if _localname(x.tag) == "v":
+                        vtext = x.text or ""
+                        break
+                if t == "s":
+                    try:
+                        val = shared[int(vtext)]
+                    except Exception:
+                        val = ""
+                else:
+                    val = vtext
+            cells[ci] = val
+            maxc = max(maxc, ci)
+        rows.append([cells.get(i, "") for i in range(maxc + 1)])
+    return rows
+
+def parse_spreadsheet(data):
+    """Return a list of row lists from raw .xlsx or .csv/.tsv bytes."""
+    if data[:4] == b"PK\x03\x04":          # xlsx is a zip archive
+        return read_xlsx(data)
+    text = None
+    for enc in ("utf-8-sig", "utf-8", "latin-1"):
+        try:
+            text = data.decode(enc)
+            break
+        except Exception:
+            text = None
+    if text is None:
+        text = data.decode("utf-8", "replace")
+    lines = text.splitlines()
+    delim = "\t" if (lines and lines[0].count("\t") > lines[0].count(",")) else ","
+    return [r for r in csv.reader(io.StringIO(text), delimiter=delim)]
+
+_HEADER_SYNONYMS = {
+    "test":       ["test", "exam", "test name", "paper"],
+    "first_name": ["first name", "first", "firstname", "given name", "first names"],
+    "surname":    ["surname", "last name", "lastname", "family name", "last"],
+    "name":       ["name", "student", "full name", "student name", "candidate"],
+    "correct":    ["correct", "marks", "correct answers", "score correct", "right", "raw"],
+    "total":      ["total", "out of", "questions", "total questions", "max", "no. questions"],
+    "score":      ["score", "scaled", "scaled score", "score /1000", "scaled /1000"],
+    "percent":    ["percent", "percentage", "%", "pct"],
+    "comments":   ["comments", "comment", "notes", "note"],
+}
+
+def _norm_header(s):
+    return re.sub(r"\s+", " ", str(s or "").strip().lower()).strip(" .:_-")
+
+def _map_headers(header_row):
+    mapping = {}
+    for idx, cell in enumerate(header_row):
+        h = _norm_header(cell)
+        for key, syns in _HEADER_SYNONYMS.items():
+            if h in syns and key not in mapping:
+                mapping[key] = idx
+    return mapping
+
+def import_rows(rows, default_test=""):
+    """Insert attempts from parsed spreadsheet rows. Everyone is imported clean
+    (empty comments) unless the sheet has a Comments column with a value.
+    Returns a summary dict."""
+    default_test = str(default_test or "").strip()
+    # Find the header row within the first few rows.
+    header_idx, mapping = None, {}
+    for i, row in enumerate(rows[:8]):
+        m = _map_headers(row)
+        if ("first_name" in m or "name" in m) and (
+                "test" in m or "score" in m or "correct" in m or default_test):
+            header_idx, mapping = i, m
+            break
+    if header_idx is None:
+        return {"ok": False, "error":
+                "Couldn't find a header row. Expected columns like "
+                "Test, First name, Surname, Correct, Total."}
+
+    imported, skipped, errors = 0, 0, []
+
+    def cell(row, key):
+        j = mapping.get(key)
+        return (row[j].strip() if j is not None and j < len(row) and row[j] is not None else "")
+
+    for n, row in enumerate(rows[header_idx + 1:], start=header_idx + 2):
+        if not any((str(c).strip() for c in row)):
+            continue  # blank line
+        test = cell(row, "test") or default_test
+        first = cell(row, "first_name")
+        surname = cell(row, "surname")
+        if not first and "name" in mapping:      # combined name column
+            raw = cell(row, "name")
+            if "," in raw:                        # "Surname, First"
+                surname, first = [p.strip() for p in raw.split(",", 1)]
+            elif raw:
+                parts = raw.split()
+                first = parts[0]
+                surname = " ".join(parts[1:])
+        if not test or not first or not surname:
+            skipped += 1
+            errors.append(f"Row {n}: missing test or name")
+            continue
+
+        def as_int(v):
+            v = str(v).strip().replace("%", "")
+            if v == "":
+                return None
+            try:
+                return int(round(float(v)))
+            except Exception:
+                return None
+
+        correct = as_int(cell(row, "correct"))
+        total = as_int(cell(row, "total"))
+        score = as_int(cell(row, "score"))
+
+        if correct is not None and total and total > 0:
+            correct = max(0, min(correct, total))
+            score = round(correct / total * 1000)
+            percent = round(correct / total * 100)
+        elif score is not None:
+            total = total if total and total > 0 else 50
+            percent = round(score / 10)
+            correct = round(score / 1000 * total)
+        else:
+            skipped += 1
+            errors.append(f"Row {n}: no Correct/Total or Score")
+            continue
+
+        insert_result({
+            "test": test, "first_name": first, "surname": surname,
+            "correct": correct, "total": total, "score": score,
+            "percent": percent, "passed": 1 if score >= 700 else 0,
+            "domains": {}, "comments": cell(row, "comments"),  # blank => clean
+        })
+        imported += 1
+
+    return {"ok": True, "imported": imported, "skipped": skipped,
+            "errors": errors[:10]}
+
+def import_template_csv():
+    example_test = next(iter(TEST_FILES.keys()), "Practice Test 1 (Modules 1-6)")
+    buf = io.StringIO()
+    w = csv.writer(buf)
+    w.writerow(["Test", "First name", "Surname", "Correct", "Total", "Comments"])
+    w.writerow([example_test, "Ada", "Lovelace", 42, 50, ""])
+    w.writerow([example_test, "Alan", "Turing", 47, 50, ""])
+    return buf.getvalue().encode("utf-8")
 
 # pages
 def landing_page():
@@ -439,6 +659,19 @@ tr:last-child td{{border-bottom:none}}
     <span id="a_msg" class="ok"></span>
   </div>
 </details>
+<details class="addbox noprint" id="importbox">
+  <summary>📥 Import from a spreadsheet (Excel or CSV)</summary>
+  <p class="sub" style="margin:.2em 0 12px">Upload an <strong>.xlsx</strong> or <strong>.csv</strong> with columns <em>Test, First name, Surname, Correct, Total</em> (Comments optional). Everyone is imported clean unless a Comments column has a value. <a href="/import_template.csv">Download a template</a>.</p>
+  <div class="addgrid">
+    <label class="wide">Spreadsheet file<input type="file" id="imp_file" accept=".xlsx,.csv,.tsv,.txt"></label>
+    <label class="wide">Default test — used for rows whose Test cell is blank (optional)
+      <select id="imp_test"><option value="">— none —</option>{add_opts}</select></label>
+  </div>
+  <div class="addfoot">
+    <button class="btnlink" onclick="importFile()">Import file</button>
+    <span id="imp_msg" class="ok"></span>
+  </div>
+</details>
 <table><thead><tr><th>When</th><th>Student</th><th>Test</th><th>Correct</th><th>Score</th><th>%</th><th>Result</th><th>Proctoring</th><th class="noprint">Actions</th></tr></thead>
 <tbody>{body_rows}</tbody></table>
 {delete_js}
@@ -461,6 +694,26 @@ tr:last-child td{{border-bottom:none}}
       .catch(function(){{ msg('Save failed \u2014 is the server running?'); }});
   }};
 
+  /* ---- import from spreadsheet ---- */
+  function impMsg(t){{ var m=document.getElementById('imp_msg'); if(m) m.textContent=t; }}
+  window.importFile=function(){{
+    var fi=document.getElementById('imp_file');
+    if(!fi||!fi.files||!fi.files[0]){{ impMsg('Choose a file first.'); return; }}
+    var file=fi.files[0];
+    var dt=document.getElementById('imp_test').value;
+    impMsg('Importing\u2026');
+    file.arrayBuffer().then(function(buf){{
+      var url='/api/import?name='+encodeURIComponent(file.name)+(dt?('&test='+encodeURIComponent(dt)):'');
+      return fetch(url,{{method:'POST',headers:{{'Content-Type':'application/octet-stream'}},body:buf}});
+    }}).then(function(r){{return r.json();}}).then(function(j){{
+      if(j&&j.ok){{
+        impMsg('Imported '+j.imported+(j.skipped?(' \u2014 skipped '+j.skipped+' (see below)'):'')+'.');
+        if(j.errors&&j.errors.length){{ console.log('Import skipped:',j.errors); }}
+        setTimeout(function(){{ location.reload(); }}, 1000);
+      }} else {{ impMsg('Import failed: '+((j&&j.error)||'unknown format')); }}
+    }}).catch(function(){{ impMsg('Import failed \u2014 is the server running?'); }});
+  }};
+
   /* ---- auto-refresh every 10s (paused while you're editing) ---- */
   var KEY='report_autorefresh';
   function on(){{ try{{ return localStorage.getItem(KEY)!=='0'; }}catch(e){{ return true; }} }}
@@ -468,8 +721,8 @@ tr:last-child td{{border-bottom:none}}
   var chk=document.getElementById('autochk');
   if(chk){{ chk.checked=on(); chk.addEventListener('change',function(){{ setOn(chk.checked); }}); }}
   function busy(){{
-    var ab=document.getElementById('addbox');
-    if(ab && ab.open) return true;                 // don't wipe a form you're filling
+    var boxes=document.querySelectorAll('details.addbox');
+    for(var i=0;i<boxes.length;i++){{ if(boxes[i].open) return true; }}  // a panel is open
     var a=document.activeElement;
     if(a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return true;
     if(window.getSelection && String(window.getSelection())) return true;
@@ -678,9 +931,9 @@ PROCTOR_SNIPPET = """
     rules.id='rulesScreen';
     rules.className='card hidden';
     rules.innerHTML=
-      '<div><span class="tag">PROCTORED EXAM RULES</span></div>'+
+      '<div><span class="tag">PROCTORED EXAM \u2014 RULES</span></div>'+
       '<h1 style="margin:.2em 0">Before you begin</h1>'+
-      '<p class="sub">This attempt is proctored. Please read the rules, your '+
+      '<p class="sub">This attempt is proctored. Please read the rules \u2014 your '+
       'webcam is on and the following are automatically detected and recorded '+
       'against your result:</p>'+
       '<ul>'+
@@ -690,15 +943,17 @@ PROCTOR_SNIPPET = """
           'or windows.</span> Doing so is flagged with the method used.</li>'+
         '<li><span class="warn">Keep your camera on</span> with your face visible '+
           'throughout.</li>'+
-        '<li>The timer keeps running the whole time, leaving the exam does '+
+        '<li>The timer keeps running the whole time \u2014 leaving the exam does '+
           '<strong>not</strong> pause it.</li>'+
+        '<li>Anything flagged is saved with your mark and shown to the trainer in '+
+          'the results report.</li>'+
       '</ul>'+
       '<label class="ack"><input type="checkbox" id="ackChk">'+
         '<span>I understand these rules and agree that any of the above will be '+
         'recorded and flagged as a possible cheating attempt.</span></label>'+
       '<div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">'+
-        '<button class="ghost" id="rulesBack">\u2190 Back</button>'+
         '<button class="primary" id="rulesBegin" disabled>Begin exam \u2192</button>'+
+        '<button class="ghost" id="rulesBack">\u2190 Back</button>'+
       '</div>';
     intro.parentNode.insertBefore(rules, intro.nextSibling);
     var chk=rules.querySelector('#ackChk');
@@ -765,8 +1020,9 @@ PROCTOR_SNIPPET = """
     var p=document.createElement('p');
     p.id='camNotice'; p.className='sub';
     p.style.cssText='margin-top:10px;color:#8a2410;font-weight:600';
-    p.innerHTML='This is a proctored, full-screen exam. Your '+
-                'camera is required. You will review the rules before beginning.';
+    p.innerHTML='\\uD83D\\uDCF7 This is a proctored, full-screen exam \\u2014 your '+
+                'camera is required. After you click <strong>Start exam</strong> '+
+                'you\\'ll allow the camera, then review the rules before beginning.';
     var nb=intro.querySelector('.namebox');
     if(nb && nb.parentNode){ nb.parentNode.insertBefore(p, nb.nextSibling); }
     else { intro.appendChild(p); }
@@ -819,6 +1075,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if path == "/export.csv":
             return self._send(200, export_csv(sel_test), "text/csv; charset=utf-8",
                               {"Content-Disposition": "attachment; filename=exam_results.csv"})
+        if path == "/import_template.csv":
+            return self._send(200, import_template_csv(), "text/csv; charset=utf-8",
+                              {"Content-Disposition": "attachment; filename=import_template.csv"})
         if path.startswith("/tests/"):
             fn = os.path.basename(path)
             fp = os.path.join(TESTS_DIR, fn)
@@ -829,6 +1088,23 @@ class Handler(http.server.BaseHTTPRequestHandler):
         return self._send(404, "Not found", "text/plain")
 
     def do_POST(self):
+        post_path = urllib.parse.urlparse(self.path).path
+        if post_path == "/api/import":
+            try:
+                qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+                default_test = (qs.get("test", [""])[0]) or ""
+                length = int(self.headers.get("Content-Length", 0))
+                body = self.rfile.read(length) if length else b""
+                if not body:
+                    return self._send(400, json.dumps({"ok": False, "error": "empty file"}),
+                                      "application/json")
+                rows = parse_spreadsheet(body)
+                summary = import_rows(rows, default_test)
+                code = 200 if summary.get("ok") else 400
+                return self._send(code, json.dumps(summary), "application/json")
+            except Exception as e:
+                return self._send(500, json.dumps({"ok": False, "error": str(e)}),
+                                  "application/json")
         if self.path == "/api/add":
             try:
                 length = int(self.headers.get("Content-Length", 0))
