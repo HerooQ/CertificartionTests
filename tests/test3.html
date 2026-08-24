@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Practice Test 3</title>
+<style>
+:root{--red:#F25022;--green:#7FBA00;--blue:#00A4EF;--yellow:#FFB900;--azure:#0078D4;--ink:#242424;--gray:#605E5C;--muted:#8A8886;--light:#F3F2F1;--line:#E1DFDD;}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:#faf9f8;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding:24px}
+.logo{display:inline-grid;grid-template-columns:14px 14px;grid-gap:3px;vertical-align:middle;margin-right:10px}
+.logo i{width:14px;height:14px;display:block}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+h1{font-size:26px;margin:.2em 0}
+h2{font-size:19px;margin:.4em 0}
+.sub{color:var(--gray);font-size:15px}
+.pill{display:inline-block;background:var(--light);border-radius:999px;padding:4px 12px;font-size:12.5px;color:var(--gray);margin:4px 6px 0 0;font-weight:600}
+button{font-family:inherit;font-size:15px;border:none;border-radius:8px;padding:11px 20px;cursor:pointer;font-weight:600}
+.primary{background:var(--azure);color:#fff}.primary:hover{background:#106ebe}
+.ghost{background:var(--light);color:var(--ink)}.ghost:hover{background:#e8e6e4}
+.danger{background:var(--red);color:#fff}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:17px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 12px}
+.timer.low{color:var(--red);border-color:var(--red)}
+.progress{height:6px;background:var(--light);border-radius:3px;overflow:hidden;margin:8px 0 0}
+.progress>span{display:block;height:100%;background:var(--green);width:0%}
+.qtext{font-size:18px;font-weight:600;margin:6px 0 18px}
+.opt{display:flex;align-items:flex-start;gap:12px;border:1.5px solid var(--line);border-radius:10px;padding:14px 16px;margin:10px 0;cursor:pointer;transition:.12s}
+.opt:hover{border-color:var(--azure);background:#f5fbff}
+.opt.sel{border-color:var(--azure);background:#eaf4fb}
+.opt input{margin-top:3px;transform:scale(1.15)}
+.opt.correct{border-color:var(--green);background:#f2f9e7}
+.opt.wrong{border-color:var(--red);background:#fdeceb}
+.tag{font-size:12px;color:var(--muted);font-weight:600}
+.nav{display:flex;gap:10px;justify-content:space-between;margin-top:22px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:7px;margin-top:8px}
+.gcell{height:38px;border-radius:7px;border:1px solid var(--line);background:#fff;font-weight:600;font-size:13px;cursor:pointer;color:var(--gray)}
+.gcell.answered{background:var(--azure);color:#fff;border-color:var(--azure)}
+.gcell.flagged{background:var(--yellow);color:#3a2f00;border-color:var(--yellow)}
+.gcell.current{outline:3px solid var(--ink);outline-offset:1px}
+.flagbtn{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--gray)}
+.flagbtn.on{background:var(--yellow);border-color:var(--yellow);color:#3a2f00}
+.scorebig{font-size:64px;font-weight:800;line-height:1}
+.result-banner{border-radius:12px;padding:22px 26px;color:#fff;margin-bottom:20px}
+.pass{background:linear-gradient(135deg,#5a8f00,#7FBA00)}
+.fail{background:linear-gradient(135deg,#c23b22,#F25022)}
+.dbar{background:var(--light);border-radius:6px;height:22px;overflow:hidden;margin:4px 0 12px}
+.dbar>span{display:block;height:100%;background:var(--azure);color:#fff;font-size:12px;font-weight:700;text-align:right;padding-right:8px;line-height:22px;white-space:nowrap}
+.rev{border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0}
+.rev .expl{background:var(--light);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--gray);margin-top:10px}
+.badge{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:2px 9px;margin-left:8px}
+.b-ok{background:#e3f0cf;color:#3f5c00}.b-no{background:#fdd8d3;color:#8a2410}
+small.k{color:var(--muted)}
+.hidden{display:none}
+@media print{.noprint{display:none}body{background:#fff}}
+
+.namebox{display:grid;gap:12px;max-width:440px;margin:18px 0 4px}
+.namebox label{font-size:13px;font-weight:700;color:var(--gray);margin-bottom:-6px}
+.namebox input{font-family:inherit;font-size:15px;padding:11px 13px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink)}
+.namebox input:focus{outline:none;border-color:var(--azure);background:#f5fbff}
+.saventc{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* --- exam lockdown --- */
+body.exam-locked, body.exam-locked *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none;}
+</style></head><body><div class="wrap">
+
+<!-- INTRO -->
+<div id="intro" class="card">
+  <div><span class="logo"><i style="background:var(--red)"></i><i style="background:var(--green)"></i><i style="background:var(--blue)"></i><i style="background:var(--yellow)"></i></span>
+  <span class="tag">SC-900 PRACTICE EXAM</span></div>
+  <h1>Practice Test 3</h1>
+  <p class="sub">Cumulative through Week 6 · Modules 1–18 (adds governance, protection &amp; Azure security)</p>
+  <div style="margin:14px 0">
+    <span class="pill">50 questions</span><span class="pill">Scored out of 1000</span>
+    <span class="pill">Pass = 700</span><span class="pill">45-minute timer</span>
+    <span class="pill">Modules 1–18</span>
+  </div>
+  <h2>How this works</h2>
+  <p class="sub">This mock mirrors the official SC-900: a scaled score out of 1000 with a passing bar of 700. Microsoft uses difficulty-weighted scaling; this practice test approximates it by weighting all 50 questions equally (20 points each), so 35 correct = 700. Questions are drawn at random from a larger bank and reshuffled each attempt. Multiple-response questions must be fully correct to earn points. You can flag questions and revisit them before submitting. At the end you’ll get a pass/fail result, a per-domain breakdown, and full explanations.</p>
+  <div class="namebox">
+    <label for="fname">First name</label>
+    <input id="fname" type="text" autocomplete="given-name" placeholder="e.g. Thandi" required>
+    <label for="sname">Surname</label>
+    <input id="sname" type="text" autocomplete="family-name" placeholder="e.g. Mokoena" required>
+  </div>
+  <div style="margin-top:20px"><button class="primary" onclick="beginExam()">Start exam →</button></div>
+</div>
+
+<!-- EXAM -->
+<div id="exam" class="hidden">
+  <div class="bar noprint">
+    <div><strong id="qcount"></strong> <small class="k">· answered <span id="ansN">0</span>/50</small></div>
+    <div class="timer" id="timer">45:00</div>
+  </div>
+  <div class="progress noprint"><span id="pbar"></span></div>
+  <div class="card" style="margin-top:14px">
+    <div class="tag" id="qmeta"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="nav">
+      <button class="ghost" onclick="prev()">← Previous</button>
+      <button class="flagbtn" id="flagbtn" onclick="toggleFlag()">⚑ Flag for review</button>
+      <button class="primary" id="nextbtn" onclick="next()">Next →</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="bar"><strong>Question navigator</strong>
+      <button class="danger" onclick="trySubmit()">Review &amp; submit</button></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results" class="hidden"></div>
+
+</div>
+<script>
+/* ===== Exam keyboard/selection lockdown ===== */
+(function(){
+  var locked=false;
+  function stopKey(e){ if(!locked) return; e.preventDefault(); e.stopPropagation(); return false; }
+  function stopIfLocked(e){ if(locked){ e.preventDefault(); } }
+  ['keydown','keypress','keyup'].forEach(function(t){ document.addEventListener(t, stopKey, true); });
+  ['selectstart','contextmenu','copy','cut','dragstart'].forEach(function(t){ document.addEventListener(t, stopIfLocked, true); });
+  window.__setExamLock=function(on){
+    locked=!!on;
+    if(document.body){ document.body.classList.toggle('exam-locked', locked); }
+    if(locked && document.activeElement && document.activeElement.blur){ try{ document.activeElement.blur(); }catch(e){} }
+  };
+})();
+const QUESTIONS_ALL = [{"m":1,"d":"Concepts (security, compliance & identity)","q":"In the shared responsibility model, which items are ALWAYS the customer’s responsibility, regardless of cloud service model? (Choose two.)","o":["Physical datacenter security","Information and data","Accounts and identities","Physical network hardware"],"a":[1,2],"e":"Data and identities (and devices) are always the customer’s responsibility in every cloud model."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"Which cloud service model places the MOST responsibility on the customer?","o":["SaaS","PaaS","IaaS","Serverless"],"a":[2],"e":"IaaS gives the customer responsibility for the OS, applications, and data; SaaS gives the least."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"What is the primary goal of a defense-in-depth strategy?","o":["Use a single strong firewall","Layer multiple independent controls","Encrypt all data twice","Rely on physical security only"],"a":[1],"e":"Defense in depth layers controls so one failure doesn’t expose assets."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"Which element of the CIA triad does encryption primarily protect?","o":["Confidentiality","Integrity","Availability","Accountability"],"a":[0],"e":"Encryption keeps data readable only to authorized parties — confidentiality."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"Which element of the CIA triad does hashing primarily protect?","o":["Confidentiality","Integrity","Availability","Authentication"],"a":[1],"e":"Hashing detects whether data has changed — it protects integrity."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"Backups and DDoS protection most directly support which CIA principle?","o":["Confidentiality","Integrity","Availability","Non-repudiation"],"a":[2],"e":"They keep systems and data reachable when needed — availability."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"Which statement best defines risk?","o":["A weakness in a system","A potential cause of harm","The likelihood and impact of a threat exploiting a vulnerability","A safeguard that reduces harm"],"a":[2],"e":"Risk combines likelihood and impact."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"A weakness that a threat can take advantage of is called a:","o":["Threat","Vulnerability","Control","Exploit"],"a":[1],"e":"A vulnerability is an exploitable weakness."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"What does GRC stand for?","o":["Governance, Risk, and Compliance","Global Risk Control","Governance, Reporting, and Compliance","Group Resource Control"],"a":[0],"e":"GRC = Governance, Risk, and Compliance."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"Data residency refers to:","o":["Whose laws apply to data","Where data is physically stored","Who can read the data","How long data is retained"],"a":[1],"e":"Residency = the physical/geographic location where data is stored."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"An attack that uses deceptive messages to trick users into revealing credentials is:","o":["Ransomware","Phishing","A DDoS attack","A brute-force attack"],"a":[1],"e":"Phishing uses deception to steal credentials or information."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"Ransomware is malware that primarily:","o":["Floods a network with traffic","Encrypts data and demands payment","Guesses passwords","Intercepts network traffic"],"a":[1],"e":"Ransomware encrypts data and demands a ransom."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"In a PaaS solution, who is responsible for patching the operating system?","o":["The customer","The cloud provider","A third-party vendor","No one — it isn’t patched"],"a":[1],"e":"In PaaS the provider manages the OS and platform."},{"m":1,"d":"Concepts (security, compliance & identity)","q":"Data sovereignty is best described as:","o":["Where data is stored","Whose laws and regulations govern the data","How data is encrypted","Who owns the storage hardware"],"a":[1],"e":"Sovereignty concerns which jurisdiction’s laws apply to the data."},{"m":2,"d":"Concepts (security, compliance & identity)","q":"Which phrase best captures the Zero Trust model?","o":["Trust but verify","Never trust, always verify","Trust the internal network","Verify once, trust always"],"a":[1],"e":"Zero Trust: never trust, always verify."},{"m":2,"d":"Concepts (security, compliance & identity)","q":"Which are the three guiding principles of Zero Trust? (Choose three.)","o":["Verify explicitly","Trust the corporate network","Use least-privilege access","Assume breach"],"a":[0,2,3],"e":"Verify explicitly, use least-privilege access, and assume breach."},{"m":2,"d":"Concepts (security, compliance & identity)","q":"The principle “assume breach” encourages you to:","o":["Trust all internal traffic","Segment access and limit blast radius","Disable monitoring","Grant broad standing access"],"a":[1],"e":"Assume breach means segment, encrypt, and monitor to limit damage."},{"m":2,"d":"Concepts (security, compliance & identity)","q":"Zero Trust is best described as:","o":["A single product you buy","A hardware firewall","A security strategy applied across the estate","A type of VPN"],"a":[2],"e":"Zero Trust is a strategy/architecture, not one product."},{"m":2,"d":"Concepts (security, compliance & identity)","q":"Which of the following is one of the six pillars of Zero Trust?","o":["Identities","Firewalls","Passwords","Antivirus"],"a":[0],"e":"The pillars are identities, endpoints, apps, data, infrastructure, and networks."},{"m":2,"d":"Concepts (security, compliance & identity)","q":"“Verify explicitly” means access decisions should be based on:","o":["The user’s password alone","All available signals (user, device, location, risk)","Network location only","A single trusted certificate"],"a":[1],"e":"Verify explicitly uses many signals together."},{"m":2,"d":"Concepts (security, compliance & identity)","q":"In least-privilege access, “JIT” stands for:","o":["Just-in-time","Join-in-tenant","Joint identity trust","Justified internal token"],"a":[0],"e":"JIT = just-in-time access, granted only when needed."},{"m":2,"d":"Concepts (security, compliance & identity)","q":"Why did the traditional “castle-and-moat” model become inadequate?","o":["Firewalls stopped working","Cloud, mobile, and remote work dissolved the network perimeter","Encryption became illegal","Passwords were abolished"],"a":[1],"e":"The perimeter dissolved with cloud and remote work."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"Symmetric encryption uses:","o":["A public/private key pair","One shared secret key for both encryption and decryption","No key at all","A one-way function"],"a":[1],"e":"Symmetric encryption uses a single shared key."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"Asymmetric encryption uses:","o":["One shared key","A public/private key pair","A hash function","A salt only"],"a":[1],"e":"Asymmetric encryption uses a key pair — public and private."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"Which statement about hashing is TRUE?","o":["It is reversible with the right key","It is a one-way function that uses no key","It requires a public key","It always produces variable-length output"],"a":[1],"e":"Hashing is one-way, keyless, and produces fixed-length output."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"Which technology protects data in transit?","o":["TLS/HTTPS","BitLocker","A hash","A banned-password list"],"a":[0],"e":"TLS/HTTPS encrypts data moving across the network."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"Encryption at rest protects:","o":["Data moving across a network","Data stored on disks, databases, and backups","Data being processed in memory","User passwords in transit"],"a":[1],"e":"At-rest encryption protects stored data."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"A digital signature provides which of the following? (Choose three.)","o":["Integrity","Availability","Authenticity","Non-repudiation"],"a":[0,2,3],"e":"Signing provides integrity, authenticity, and non-repudiation."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"Which is an example of a symmetric encryption algorithm?","o":["RSA","AES","SHA-256","Diffie-Hellman"],"a":[1],"e":"AES is symmetric; RSA is asymmetric; SHA-256 is a hash."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"The key difference between hashing and encryption is that:","o":["Hashing is reversible; encryption is not","Encryption is reversible; hashing is one-way","Both are one-way","Both require a shared key"],"a":[1],"e":"Encryption is reversible; hashing is irreversible."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"Non-repudiation ensures that:","o":["Data cannot be read","A sender cannot deny having sent a message","Data is always available","Passwords cannot be reused"],"a":[1],"e":"Non-repudiation prevents a sender from denying they sent something."},{"m":3,"d":"Concepts (security, compliance & identity)","q":"HTTPS commonly uses asymmetric encryption to:","o":["Encrypt the entire session by itself","Securely exchange a symmetric session key","Replace hashing","Store passwords"],"a":[1],"e":"Asymmetric keys exchange a fast symmetric key for the session."},{"m":4,"d":"Concepts (security, compliance & identity)","q":"In modern security, what is considered the primary security perimeter?","o":["The corporate firewall","Identity","The physical building","The VPN"],"a":[1],"e":"Identity is the modern primary security perimeter."},{"m":4,"d":"Concepts (security, compliance & identity)","q":"What are the four pillars of identity?","o":["Authentication, Authorization, Auditing, Administration","Access, Audit, Alert, Approve","Identify, Verify, Grant, Log","Users, Groups, Devices, Apps"],"a":[0],"e":"Administration, Authentication, Authorization, Auditing."},{"m":4,"d":"Concepts (security, compliance & identity)","q":"Which pillar of identity answers “what are you allowed to do?”","o":["Authentication","Authorization","Administration","Auditing"],"a":[1],"e":"Authorization determines the level of access."},{"m":4,"d":"Concepts (security, compliance & identity)","q":"Which pillar of identity tracks who did what, and when?","o":["Administration","Authentication","Auditing","Authorization"],"a":[2],"e":"Auditing records and reports on activity."},{"m":4,"d":"Concepts (security, compliance & identity)","q":"Which of the following is a non-human identity?","o":["A guest user","A service principal","An employee","A partner contact"],"a":[1],"e":"A service principal is an application/service identity."},{"m":4,"d":"Concepts (security, compliance & identity)","q":"A credential is best defined as:","o":["A group of users","Something that proves an identity","A network location","A compliance report"],"a":[1],"e":"A credential (e.g. password, key) proves an identity."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"Authentication answers which question?","o":["What can you access?","Who are you?","Where are you?","When did you sign in?"],"a":[1],"e":"Authentication proves who you are."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"Authorization answers which question?","o":["Who are you?","What are you allowed to do?","What is your password?","Which device are you using?"],"a":[1],"e":"Authorization determines what you can access."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"Which happens FIRST in a sign-in?","o":["Authorization","Authentication","Auditing","Provisioning"],"a":[1],"e":"You must authenticate before access is authorized."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"What are the three authentication factors?","o":["Something you know, have, and are","Password, PIN, and token","Email, phone, and app","User, device, and location"],"a":[0],"e":"Know / have / are are the three factor categories."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"Multi-factor authentication requires:","o":["Two passwords","Two or more factors from different categories","A password and a PIN","Any two credentials"],"a":[1],"e":"MFA needs factors from two DIFFERENT categories."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"Do a password and a PIN together qualify as MFA?","o":["Yes","No — both are ‘something you know’","Only with a token","Only on mobile"],"a":[1],"e":"Both are the same factor category, so it isn’t MFA."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"An identity provider (IdP) is a service that:","o":["Stores files","Authenticates identities and issues tokens","Filters network traffic","Encrypts disks"],"a":[1],"e":"An IdP authenticates and issues tokens apps trust."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"A fingerprint is an example of which authentication factor?","o":["Something you know","Something you have","Something you are","Somewhere you are"],"a":[2],"e":"Biometrics are ‘something you are’."},{"m":5,"d":"Concepts (security, compliance & identity)","q":"Two employees authenticate successfully, but only one can open payroll. This difference is due to:","o":["Authentication","Authorization","Auditing","Federation"],"a":[1],"e":"Same AuthN, different AuthZ."},{"m":6,"d":"Concepts (security, compliance & identity)","q":"What is Microsoft’s cloud-based identity and directory service called?","o":["Active Directory Domain Services","Microsoft Entra ID","Microsoft Defender","Azure Key Vault"],"a":[1],"e":"Microsoft Entra ID (formerly Azure AD) is the cloud directory/IdP."},{"m":6,"d":"Concepts (security, compliance & identity)","q":"Where does Active Directory Domain Services (AD DS) run?","o":["Only in the cloud","On-premises","Only on mobile devices","In a web browser"],"a":[1],"e":"AD DS is the on-premises directory service."},{"m":6,"d":"Concepts (security, compliance & identity)","q":"Single sign-on (SSO) allows a user to:","o":["Use one password everywhere manually","Authenticate once and access many applications","Sign in only once ever","Skip authentication entirely"],"a":[1],"e":"SSO = one authentication grants access to many apps."},{"m":6,"d":"Concepts (security, compliance & identity)","q":"Federation primarily enables:","o":["Trust across organizational boundaries","Faster disk encryption","Password complexity rules","Network segmentation"],"a":[0],"e":"Federation establishes trust between separate organizations/IdPs."},{"m":6,"d":"Concepts (security, compliance & identity)","q":"In a federated sign-in, the relying party (application):","o":["Re-checks the user’s password","Trusts the token issued by the identity provider","Stores the user’s password","Ignores the identity provider"],"a":[1],"e":"The relying party trusts the IdP’s token instead of re-verifying the password."},{"m":6,"d":"Concepts (security, compliance & identity)","q":"Which protocols are commonly associated with federation? (Choose two.)","o":["SAML","Kerberos","OpenID Connect","LDAP"],"a":[0,2],"e":"SAML and OpenID Connect are common federation protocols."},{"m":6,"d":"Concepts (security, compliance & identity)","q":"SSO differs from federation in that federation specifically:","o":["Works only inside one organization","Extends trust ACROSS separate organizations","Requires no identity provider","Replaces authentication"],"a":[1],"e":"Federation extends trust across organizations; SSO reuses one login."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"Microsoft Entra ID was previously known as:","o":["Windows Server AD","Azure Active Directory","Microsoft Intune","Microsoft Sentinel"],"a":[1],"e":"Entra ID was formerly Azure Active Directory (Azure AD)."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"Which Microsoft Entra ID edition adds Privileged Identity Management, Identity Protection, and access reviews?","o":["Free","P1","P2","Basic"],"a":[2],"e":"P2 adds PIM, Identity Protection, and access reviews."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"Which edition first introduces Conditional Access and dynamic groups?","o":["Free","P1","P2","Enterprise"],"a":[1],"e":"P1 adds Conditional Access and dynamic groups; P2 builds on it."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"A managed identity is best described as:","o":["A guest user account","A service principal whose credentials Entra manages automatically","A security group","A device record"],"a":[1],"e":"A managed identity is an auto-managed service principal for Azure resources."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"What is the difference between a member and a guest user?","o":["Member is external; guest is internal","Member is internal; guest is external","They are identical","Guests have more privileges by default"],"a":[1],"e":"Members are internal; guests are external (B2B) users."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"Which group type adds a shared mailbox, calendar, and files for collaboration?","o":["Security group","Microsoft 365 group","Dynamic device group","Distribution-only group"],"a":[1],"e":"Microsoft 365 groups add collaboration resources; security groups grant access."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"A service principal represents:","o":["A physical server","The identity an application runs as within a tenant","A network subnet","A compliance policy"],"a":[1],"e":"A service principal is the app’s identity in a tenant."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"Dynamic group membership (rule-based) requires at least which edition?","o":["Free","P1","P2","None"],"a":[1],"e":"Dynamic groups require Entra ID P1 or higher."},{"m":7,"d":"Microsoft Entra (identity & access)","q":"Compared with AD DS, Microsoft Entra ID primarily uses which protocols?","o":["Kerberos and LDAP","OpenID Connect, OAuth, and SAML","NTLM only","FTP and SMB"],"a":[1],"e":"Entra ID uses modern web protocols; AD DS uses Kerberos/LDAP."},{"m":8,"d":"Microsoft Entra (identity & access)","q":"Hybrid identity provides a user with:","o":["Two separate identities","One identity that works across on-premises AD and cloud Entra ID","A guest identity only","No password"],"a":[1],"e":"Hybrid identity gives one identity across on-prem and cloud."},{"m":8,"d":"Microsoft Entra (identity & access)","q":"Which tool is the full-featured synchronization server best suited to a single forest?","o":["Microsoft Entra Cloud Sync","Microsoft Entra Connect Sync","Microsoft Sentinel","Azure Key Vault"],"a":[1],"e":"Entra Connect Sync is the full sync server for a single forest."},{"m":8,"d":"Microsoft Entra (identity & access)","q":"Which synchronization option is lightweight and well suited to multiple or disconnected forests?","o":["Entra Connect Sync","Entra Cloud Sync","AD FS","Group Policy"],"a":[1],"e":"Entra Cloud Sync uses a lightweight agent, good for multi-forest."},{"m":8,"d":"Microsoft Entra (identity & access)","q":"In Password Hash Synchronization (PHS), what is synchronized to the cloud?","o":["The plaintext password","A hash of the password","The user’s certificate","Nothing"],"a":[1],"e":"PHS syncs a hash of the on-prem password to Entra ID."},{"m":8,"d":"Microsoft Entra (identity & access)","q":"Which hybrid authentication method validates the password against on-premises AD in real time?","o":["Password Hash Synchronization","Pass-through Authentication","Federation","Cloud-only"],"a":[1],"e":"PTA validates the password on-prem in real time via an agent."},{"m":8,"d":"Microsoft Entra (identity & access)","q":"Which hybrid authentication method redirects sign-in to an on-premises AD FS service?","o":["PHS","PTA","Federation","Cloud Sync"],"a":[2],"e":"Federation redirects authentication to AD FS."},{"m":9,"d":"Microsoft Entra (identity & access)","q":"What is the umbrella product for giving external users access to your resources?","o":["Microsoft Entra External ID","Microsoft Defender","Microsoft Purview","Azure Firewall"],"a":[0],"e":"Entra External ID covers B2B and customer identity."},{"m":9,"d":"Microsoft Entra (identity & access)","q":"In B2B collaboration, an invited external partner appears in your directory as a:","o":["Member user","Guest user","Service principal","Managed identity"],"a":[1],"e":"B2B partners appear as guest users."},{"m":9,"d":"Microsoft Entra (identity & access)","q":"Whose credentials does a B2B guest use to sign in?","o":["Credentials you create for them","Their own existing credentials","A shared team password","None — they bypass sign-in"],"a":[1],"e":"B2B guests bring their own identity; you don’t manage their password."},{"m":9,"d":"Microsoft Entra (identity & access)","q":"Customer identity (B2C) is designed for:","o":["Employees","Partners and vendors","Consumer-facing applications","Domain controllers"],"a":[2],"e":"B2C provides sign-in for customer/consumer apps."},{"m":9,"d":"Microsoft Entra (identity & access)","q":"A key benefit of external identities is that:","o":["You must create passwords for every external user","External users bring their own identities, so you don’t manage their passwords","External users get admin rights","No approval is ever needed"],"a":[1],"e":"External users bring their own identities — less credential management for you."},{"m":10,"d":"Microsoft Entra (identity & access)","q":"Which authentication method is considered the MOST phishing-resistant?","o":["SMS one-time code","Security question","FIDO2 security key","Email link"],"a":[2],"e":"FIDO2 security keys are phishing-resistant by design."},{"m":10,"d":"Microsoft Entra (identity & access)","q":"Which of the following are passwordless authentication methods? (Choose three.)","o":["Windows Hello for Business","SMS code","FIDO2 security key","Microsoft Authenticator passwordless sign-in"],"a":[0,2,3],"e":"Windows Hello, FIDO2, and Authenticator passwordless are all passwordless."},{"m":10,"d":"Microsoft Entra (identity & access)","q":"Why is SMS considered a weaker second factor?","o":["It is too slow","It is vulnerable to SIM-swapping and interception","It requires a password","It cannot be used on phones"],"a":[1],"e":"SMS can be intercepted or hijacked via SIM-swap."},{"m":10,"d":"Microsoft Entra (identity & access)","q":"Which is Microsoft’s recommended everyday second factor?","o":["SMS","Voice call","The Microsoft Authenticator app","A security question"],"a":[2],"e":"The Authenticator app is Microsoft’s recommended factor."},{"m":10,"d":"Microsoft Entra (identity & access)","q":"Windows Hello for Business authenticates using:","o":["A password sent to email","A biometric or PIN bound to the device","A shared team code","An SMS message"],"a":[1],"e":"Windows Hello uses biometrics or a PIN tied to the device."},{"m":11,"d":"Microsoft Entra (identity & access)","q":"Self-service password reset (SSPR) primarily allows users to:","o":["Bypass MFA","Reset their own passwords securely","Delete their accounts","Elevate to admin"],"a":[1],"e":"SSPR lets users reset their own passwords."},{"m":11,"d":"Microsoft Entra (identity & access)","q":"Before a user can use SSPR, they must:","o":["Buy a license personally","Register authentication methods","Contact the helpdesk","Disable MFA"],"a":[1],"e":"SSPR requires pre-registered authentication methods."},{"m":11,"d":"Microsoft Entra (identity & access)","q":"Microsoft Entra password protection provides which two banned-password lists? (Choose two.)","o":["A global list","A per-device list","A custom list","A public internet list"],"a":[0,2],"e":"There is a global (Microsoft) list and a custom (your) list."},{"m":11,"d":"Microsoft Entra (identity & access)","q":"Smart lockout is designed to defend against:","o":["Phishing emails","Brute-force password guessing","Data exfiltration","DDoS attacks"],"a":[1],"e":"Smart lockout blocks brute-force attempts while sparing real users."},{"m":11,"d":"Microsoft Entra (identity & access)","q":"Password writeback is used to:","o":["Delete old passwords","Synchronize a cloud password reset back to on-premises AD","Encrypt passwords at rest","Email passwords to users"],"a":[1],"e":"Writeback syncs a cloud reset back to on-prem AD in hybrid setups."},{"m":12,"d":"Microsoft Entra (identity & access)","q":"Conditional Access policies follow which logic?","o":["Always allow","If-then (if signals are met, then apply controls)","Random sampling","Block everything"],"a":[1],"e":"CA uses if-then policies based on signals."},{"m":12,"d":"Microsoft Entra (identity & access)","q":"Conditional Access requires at least which Entra ID edition?","o":["Free","P1","P2","None"],"a":[1],"e":"Conditional Access requires Entra ID P1."},{"m":12,"d":"Microsoft Entra (identity & access)","q":"On the Free tier, which feature provides basic, non-customizable protection instead of Conditional Access?","o":["Security defaults","Identity Protection","PIM","Access reviews"],"a":[0],"e":"Security defaults provide baseline protection on the Free tier."},{"m":12,"d":"Microsoft Entra (identity & access)","q":"Risk-based Conditional Access conditions (risky sign-in / risky user) require which capability?","o":["Security defaults","Identity Protection (P2)","Azure Firewall","Key Vault"],"a":[1],"e":"Risk signals come from Identity Protection, which is P2."},{"m":12,"d":"Microsoft Entra (identity & access)","q":"Which of the following are valid Conditional Access signals? (Choose three.)","o":["User or group","Device state","Location","The user’s salary"],"a":[0,1,2],"e":"CA evaluates user, device, location, app, and risk — not salary."},{"m":12,"d":"Microsoft Entra (identity & access)","q":"Which Global Secure Access component provides Zero-Trust access to private apps, replacing traditional VPN?","o":["Entra Internet Access","Entra Private Access","Azure Firewall","Key Vault"],"a":[1],"e":"Entra Private Access is the ZTNA/VPN replacement."},{"m":12,"d":"Microsoft Entra (identity & access)","q":"Blocking legacy authentication is important because legacy protocols:","o":["Are faster","Cannot enforce MFA","Use too much bandwidth","Are encrypted twice"],"a":[1],"e":"Legacy auth can’t enforce MFA, so it bypasses modern protection."},{"m":12,"d":"Microsoft Entra (identity & access)","q":"A common Conditional Access control is to:","o":["Require MFA for administrators","Disable all logging","Remove all passwords","Delete guest users"],"a":[0],"e":"Requiring MFA for admins is a common, high-value CA policy."},{"m":13,"d":"Microsoft Entra (identity & access)","q":"The goal of identity governance is to ensure:","o":["Everyone has admin rights","The right people have the right access at the right time","Passwords never expire","All access is permanent"],"a":[1],"e":"Governance = right access, right people, right time."},{"m":13,"d":"Microsoft Entra (identity & access)","q":"Access packages, used to bundle requestable resources, are part of:","o":["Entitlement management","Conditional Access","Key Vault","Defender for Cloud"],"a":[0],"e":"Access packages are an entitlement-management feature."},{"m":13,"d":"Microsoft Entra (identity & access)","q":"What is the purpose of an access review?","o":["To reset passwords","To periodically re-certify whether users still need their access","To encrypt data","To block legacy auth"],"a":[1],"e":"Access reviews periodically re-certify access."},{"m":13,"d":"Microsoft Entra (identity & access)","q":"Identity governance features generally require which Entra ID edition?","o":["Free","P1","P2","None"],"a":[2],"e":"Most governance features are Entra ID P2."},{"m":13,"d":"Microsoft Entra (identity & access)","q":"Terms of use in Entra allow an organization to:","o":["Block all external users","Require users to accept terms before gaining access","Encrypt mailboxes","Rotate keys automatically"],"a":[1],"e":"Terms of use require acceptance (consent) before access."},{"m":13,"d":"Microsoft Entra (identity & access)","q":"An access review can be configured to automatically:","o":["Grant admin rights","Remove access when a reviewer denies it","Delete the tenant","Disable auditing"],"a":[1],"e":"Reviews can auto-remove access on denial."},{"m":14,"d":"Microsoft Entra (identity & access)","q":"Privileged Identity Management (PIM) provides:","o":["Always-on admin rights","Just-in-time, time-bound privileged access","Free licensing","Network filtering"],"a":[1],"e":"PIM grants privilege just-in-time and time-bound."},{"m":14,"d":"Microsoft Entra (identity & access)","q":"In PIM, an ‘eligible’ assignment means the role is:","o":["Always active","Activated only when needed","Permanently removed","Assigned to everyone"],"a":[1],"e":"Eligible = activate when needed; active = always on."},{"m":14,"d":"Microsoft Entra (identity & access)","q":"Which controls can PIM require when a user activates a role? (Choose three.)","o":["Multi-factor authentication","Approval","Justification","A new device purchase"],"a":[0,1,2],"e":"PIM can require MFA, approval, and justification on activation."},{"m":14,"d":"Microsoft Entra (identity & access)","q":"What is the difference between Entra roles and Azure RBAC roles?","o":["They are identical","Entra roles manage the directory; Azure RBAC manages resources","Entra roles manage resources; Azure RBAC manages the directory","Neither grants access"],"a":[1],"e":"Entra roles = directory; Azure RBAC = resources."},{"m":14,"d":"Microsoft Entra (identity & access)","q":"The principle of least privilege means:","o":["Grant the broadest role available","Grant the narrowest role and scope needed to do the job","Give everyone the same access","Never grant any access"],"a":[1],"e":"Least privilege = minimum necessary access."},{"m":14,"d":"Microsoft Entra (identity & access)","q":"Why is standing (always-on) privileged access risky?","o":["It is slower","A compromised account retains powerful rights at all times","It cannot be audited","It requires MFA"],"a":[1],"e":"Standing privilege gives an attacker permanent power if compromised."},{"m":14,"d":"Microsoft Entra (identity & access)","q":"PIM is a feature of which Entra ID edition?","o":["Free","P1","P2","Basic"],"a":[2],"e":"PIM requires Entra ID P2."},{"m":15,"d":"Microsoft Entra (identity & access)","q":"Microsoft Entra ID Protection helps you:","o":["Configure firewalls","Detect, investigate, and remediate identity risk","Store secrets","Build networks"],"a":[1],"e":"ID Protection detects, investigates, and remediates identity risk."},{"m":15,"d":"Microsoft Entra (identity & access)","q":"What is the difference between sign-in risk and user risk?","o":["Sign-in risk = the account is compromised; user risk = this sign-in is suspicious","Sign-in risk = this sign-in is suspicious; user risk = the account is likely compromised","They are the same","Neither is about identity"],"a":[1],"e":"Sign-in risk = this sign-in; user risk = the account overall."},{"m":15,"d":"Microsoft Entra (identity & access)","q":"‘Leaked credentials’ is an example of a:","o":["Network rule","Risk detection","Backup policy","Compliance score"],"a":[1],"e":"Leaked credentials is a risk detection (contributes to user risk)."},{"m":15,"d":"Microsoft Entra (identity & access)","q":"Identity Protection risk policies are typically enforced through:","o":["Group Policy","Conditional Access","Key Vault","Azure Firewall"],"a":[1],"e":"Risk becomes a Conditional Access signal for enforcement."},{"m":15,"d":"Microsoft Entra (identity & access)","q":"‘Atypical travel’ detection flags:","o":["Slow network speeds","Sign-ins from distant locations too close together in time","Expired passwords","Large downloads"],"a":[1],"e":"Atypical travel = impossible-distance sign-ins."},{"m":15,"d":"Microsoft Entra (identity & access)","q":"Identity Protection requires which Entra ID edition?","o":["Free","P1","P2","None"],"a":[2],"e":"Identity Protection is an Entra ID P2 capability."},{"m":16,"d":"Microsoft security solutions","q":"A network security group (NSG) filters traffic based on:","o":["Domain reputation","Source/destination IP, port, and protocol","User identity","File contents"],"a":[1],"e":"NSGs filter by IP, port, and protocol."},{"m":16,"d":"Microsoft security solutions","q":"Azure Firewall is best described as:","o":["A basic packet filter","A managed, stateful, cloud-native firewall","An antivirus product","A backup service"],"a":[1],"e":"Azure Firewall is a managed, stateful firewall."},{"m":16,"d":"Microsoft security solutions","q":"A Web Application Firewall (WAF) primarily protects against:","o":["Traffic floods","Common web exploits such as SQL injection (OWASP Top 10)","Disk failure","Weak passwords"],"a":[1],"e":"WAF protects web apps from exploits like SQL injection."},{"m":16,"d":"Microsoft security solutions","q":"Azure DDoS Protection primarily defends:","o":["Confidentiality","Integrity","Availability against traffic floods","Password strength"],"a":[2],"e":"DDoS Protection defends availability against volumetric attacks."},{"m":16,"d":"Microsoft security solutions","q":"Filtering outbound traffic by domain name (FQDN) is a feature of:","o":["An NSG","Azure Firewall","A hash","A managed identity"],"a":[1],"e":"FQDN filtering is an Azure Firewall capability."},{"m":16,"d":"Microsoft security solutions","q":"Which control would you use to stop a SQL-injection attack against a public web app?","o":["NSG","Web Application Firewall","DDoS Protection","Key Vault"],"a":[1],"e":"A WAF inspects and blocks web-layer exploits like SQL injection."},{"m":16,"d":"Microsoft security solutions","q":"An NSG is best described as providing which kind of protection?","o":["Application-layer inspection","Basic layer-3/4 traffic filtering","Full stateful firewalling with threat intel","Data encryption"],"a":[1],"e":"NSGs are basic L3/L4 filters, not full firewalls."},{"m":17,"d":"Microsoft security solutions","q":"Azure Key Vault is used to store which of the following? (Choose three.)","o":["Secrets","Keys","Certificates","Virtual machines"],"a":[0,1,2],"e":"Key Vault stores secrets, keys, and certificates."},{"m":17,"d":"Microsoft security solutions","q":"How can an app read a secret from Key Vault WITHOUT storing a credential in its code?","o":["Hard-code the password","Use a managed identity","Email the secret","Disable authentication"],"a":[1],"e":"A managed identity lets the app access Key Vault with no stored creds."},{"m":17,"d":"Microsoft security solutions","q":"Azure Key Vault is backed by which hardware for stronger protection?","o":["Hard disk drives","Hardware security modules (HSMs)","Graphics cards","Tape drives"],"a":[1],"e":"Key Vault is backed by HSMs."},{"m":17,"d":"Microsoft security solutions","q":"With customer-managed keys, the encryption keys are:","o":["Controlled by Microsoft only","Controlled by the customer and stored in Key Vault","Never used","Stored in plaintext"],"a":[1],"e":"Customer-managed keys are controlled by you, held in Key Vault."},{"m":17,"d":"Microsoft security solutions","q":"Which of the following is an example of encryption at rest in Azure?","o":["TLS","Storage Service Encryption","A phishing filter","An NSG rule"],"a":[1],"e":"Storage Service Encryption (and SQL TDE) encrypt data at rest."},{"m":17,"d":"Microsoft security solutions","q":"By default, who manages the encryption keys for Azure encryption at rest?","o":["Nobody — data is unencrypted","Microsoft (Microsoft-managed keys)","The end user manually","A third-party vendor"],"a":[1],"e":"By default Azure uses Microsoft-managed keys; you can switch to customer-managed."},{"m":18,"d":"Microsoft security solutions","q":"Microsoft Defender for Cloud combines which two capabilities?","o":["Email filtering and antivirus","Cloud security posture management (CSPM) and workload protection","Backup and restore","Networking and DNS"],"a":[1],"e":"Defender for Cloud = CSPM + workload protection."},{"m":18,"d":"Microsoft security solutions","q":"What does Secure Score measure?","o":["Network speed","Your security posture as a percentage","Storage capacity","License count"],"a":[1],"e":"Secure Score measures security posture."},{"m":18,"d":"Microsoft security solutions","q":"How do you raise your Secure Score?","o":["Delete resources","Apply the recommendations","Turn off logging","Add more users"],"a":[1],"e":"Completing recommendations raises Secure Score."},{"m":18,"d":"Microsoft security solutions","q":"Defender plans in Defender for Cloud add:","o":["More storage","Active threat protection for specific resource types","Cheaper licensing","Faster networking"],"a":[1],"e":"Defender plans add workload threat protection per resource type."},{"m":18,"d":"Microsoft security solutions","q":"Defender for Cloud can assess security posture across which clouds?","o":["Azure only","Azure, AWS, and GCP","On-premises only","None"],"a":[1],"e":"Defender for Cloud is multicloud (Azure, AWS, GCP)."},{"m":18,"d":"Microsoft security solutions","q":"Which best distinguishes CSPM from workload protection in Defender for Cloud?","o":["CSPM detects live attacks; workload protection checks configuration","CSPM checks configuration/posture; workload protection detects live threats","They are identical","Neither relates to security"],"a":[1],"e":"CSPM = posture/config; workload protection = active threat detection."}];
+const PASS = 700, TOTAL_POINTS = 1000, NUM_Q = 50, EXAM_SECONDS = 45*60;
+let quiz=[], answers={}, flags={}, cur=0, timeLeft=EXAM_SECONDS, timerId=null;
+let examEndsAt=0, syncTimerId=null, examSubmitted=false;
+
+let STUDENT = {first:'', surname:''};
+const TEST_NAME = "Practice Test 3 (Modules 1-18)";
+function beginExam(){
+  const f=(document.getElementById('fname')||{}).value||'';
+  const s=(document.getElementById('sname')||{}).value||'';
+  if(!f.trim()||!s.trim()){ alert('Please enter your first name and surname before starting the exam.'); return; }
+  STUDENT={first:f.trim(), surname:s.trim()};
+  startExam();
+}
+function saveResult(correct,total,scaled,passed,perDomain){
+  try{
+    fetch('/api/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        test: TEST_NAME,
+        first_name: STUDENT.first,
+        surname: STUDENT.surname,
+        correct: correct,
+        total: total,
+        score: scaled,
+        percent: Math.round(correct/total*100),
+        passed: passed?1:0,
+        domains: perDomain
+      })
+    }).then(r=>{ if(r&&r.ok){ setSaveNote('Result saved to the database ✓'); } })
+      .catch(()=>{ setSaveNote('Result not saved — open this test through the SC-900 server to record marks.'); });
+  }catch(e){ setSaveNote('Result not saved (offline).'); }
+}
+function setSaveNote(msg){
+  var el=document.getElementById('saveNote'); if(el) el.textContent=msg;
+}
+
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// balanced selection across in-scope modules, then shuffle options (tracking correct by value)
+function pickQuestions(){
+  const byMod={}; QUESTIONS_ALL.forEach(q=>{(byMod[q.m]=byMod[q.m]||[]).push(q);});
+  const mods=Object.keys(byMod).map(Number).sort((a,b)=>a-b);
+  mods.forEach(m=>byMod[m]=shuffle(byMod[m]));
+  const chosen=[]; let idx=0;
+  while(chosen.length<NUM_Q){ let added=false;
+    for(const m of shuffle(mods)){ if(byMod[m][idx]){chosen.push(byMod[m][idx]); added=true; if(chosen.length>=NUM_Q)break;} }
+    if(!added)break; idx++; }
+  return shuffle(chosen).slice(0,NUM_Q).map(q=>{
+    const correctVals=q.a.map(i=>q.o[i]);
+    const opts=shuffle(q.o.map((t,i)=>({t,correct:q.a.includes(i)})));
+    return {m:q.m,d:q.d,q:q.q,e:q.e,multi:q.a.length>1,opts,correctVals};
+  });
+}
+
+function startExam(){
+  if(window.__setExamLock) window.__setExamLock(true);
+  (document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen||function(){}).call(document.documentElement);
+  examSubmitted=false;
+  quiz=pickQuestions(); answers={}; flags={}; cur=0; timeLeft=EXAM_SECONDS;
+  examEndsAt=Date.now()+EXAM_SECONDS*1000;   // optimistic; server sync overrides immediately
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('exam').classList.remove('hidden');
+  buildGrid(); render();
+  if(timerId) clearInterval(timerId);
+  timerId=setInterval(tick,1000);
+  if(syncTimerId) clearInterval(syncTimerId);
+  syncTimerId=setInterval(function(){ syncTime(); }, 15000);  // re-anchor to server clock
+  syncTime();
+}
+// Ask the server for the authoritative time remaining. The deadline is stamped
+// server-side on first start, so reload / reopen / sleep cannot reset it.
+function syncTime(){
+  try{
+    fetch('/api/start',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({test:TEST_NAME,first_name:STUDENT.first,surname:STUDENT.surname})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d&&d.ok&&typeof d.remaining==='number'){
+        examEndsAt=Date.now()+d.remaining*1000;
+        if(d.remaining<=0){ submit(); return; }   // time already gone -> auto-submit
+        if(timerId) tick();
+      }
+    }).catch(function(){ /* server offline: fall back to local countdown */ });
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible' && !examSubmitted && timerId){ syncTime(); }
+});
+function tick(){
+  timeLeft=Math.max(0,Math.round((examEndsAt-Date.now())/1000));
+  renderTimer();
+  if(timeLeft<=0){ if(timerId){clearInterval(timerId);timerId=null;} submit(); }
+}
+function renderTimer(){ const m=Math.floor(timeLeft/60),s=timeLeft%60; const t=document.getElementById('timer');
+  t.textContent=m+':' + (s<10?'0':'')+s; t.classList.toggle('low',timeLeft<=300); }
+
+function buildGrid(){ const g=document.getElementById('grid'); g.innerHTML='';
+  quiz.forEach((_,i)=>{ const b=document.createElement('button'); b.className='gcell'; b.textContent=i+1;
+    b.onclick=()=>{cur=i;render();}; g.appendChild(b); }); }
+function refreshGrid(){ [...document.getElementById('grid').children].forEach((b,i)=>{
+  b.className='gcell'+(answers[i]&&answers[i].length?' answered':'')+(flags[i]?' flagged':'')+(i===cur?' current':''); }); }
+
+function render(){
+  const q=quiz[cur];
+  document.getElementById('qcount').textContent='Question '+(cur+1)+' of '+quiz.length;
+  document.getElementById('qmeta').textContent=q.d+(q.multi?'  ·  select all that apply':'');
+  document.getElementById('qtext').textContent=q.q;
+  const box=document.getElementById('opts'); box.innerHTML='';
+  q.opts.forEach((op,i)=>{
+    const sel=(answers[cur]||[]).includes(op.t);
+    const row=document.createElement('label'); row.className='opt'+(sel?' sel':'');
+    const inp=document.createElement('input'); inp.type=q.multi?'checkbox':'radio'; inp.name='opt'; inp.checked=sel;
+    inp.onchange=()=>choose(op.t,q.multi);
+    const span=document.createElement('span'); span.textContent=op.t;
+    row.appendChild(inp); row.appendChild(span); box.appendChild(row);
+  });
+  document.getElementById('flagbtn').classList.toggle('on',!!flags[cur]);
+  document.getElementById('nextbtn').textContent = cur===quiz.length-1 ? 'Finish →' : 'Next →';
+  document.getElementById('pbar').style.width=((cur+1)/quiz.length*100)+'%';
+  document.getElementById('ansN').textContent=Object.values(answers).filter(a=>a&&a.length).length;
+  refreshGrid();
+}
+function choose(val,multi){
+  let a=answers[cur]||[];
+  if(multi){ a.includes(val)? a=a.filter(x=>x!==val) : a.push(val); }
+  else { a=[val]; }
+  answers[cur]=a; render();
+}
+function toggleFlag(){ flags[cur]=!flags[cur]; render(); }
+function prev(){ if(cur>0){cur--;render();} }
+function next(){ if(cur<quiz.length-1){cur++;render();} else trySubmit(); }
+function trySubmit(){
+  const unans=quiz.length-Object.values(answers).filter(a=>a&&a.length).length;
+  const msg=unans>0?('You have '+unans+' unanswered question(s). Submit anyway?'):'Submit your exam for scoring?';
+  if(confirm(msg)) submit();
+}
+function submit(){
+  if(examSubmitted) return;
+  examSubmitted=true;
+  if(window.__setExamLock) window.__setExamLock(false);
+  if(timerId){clearInterval(timerId);timerId=null;}
+  if(syncTimerId){clearInterval(syncTimerId);syncTimerId=null;}
+  let correct=0; const perDomain={};
+  quiz.forEach((q,i)=>{
+    const chosen=(answers[i]||[]).slice().sort();
+    const right=q.correctVals.slice().sort();
+    const ok = chosen.length===right.length && chosen.every((v,k)=>v===right[k]);
+    if(!perDomain[q.d]) perDomain[q.d]={c:0,t:0};
+    perDomain[q.d].t++; if(ok){correct++; perDomain[q.d].c++;}
+    q._ok=ok; q._chosen=answers[i]||[];
+  });
+  const scaled=Math.round(correct/quiz.length*TOTAL_POINTS);
+  const passed=scaled>=PASS;
+  renderResults(correct,scaled,passed,perDomain);
+  saveResult(correct,quiz.length,scaled,passed,perDomain);
+}
+
+function renderResults(correct,scaled,passed,perDomain){
+  document.getElementById('exam').classList.add('hidden');
+  const R=document.getElementById('results'); R.classList.remove('hidden');
+  let html='<div class="result-banner '+(passed?'pass':'fail')+'">'
+    +'<div style="font-size:14px;font-weight:700;letter-spacing:2px;opacity:.9">'+(passed?'PASS':'DID NOT PASS')+'</div>'
+    +'<div class="scorebig">'+scaled+'<span style="font-size:24px;font-weight:600">/1000</span></div>'
+    +'<div style="margin-top:6px;font-size:15px">'+correct+' of '+quiz.length+' correct · '+Math.round(correct/quiz.length*100)+'% · passing score is 700</div></div>';
+  html+='<div class="saventc" id="saveNote">Saving result…</div>';
+  html+='<div class="card"><h2>Score by domain</h2>';
+  Object.keys(perDomain).forEach(d=>{const o=perDomain[d];const pct=Math.round(o.c/o.t*100);
+    html+='<div style="font-size:14px;font-weight:600;margin-top:10px">'+d+' <small class="k">('+o.c+'/'+o.t+')</small></div>'
+      +'<div class="dbar"><span style="width:'+Math.max(pct,8)+'%">'+pct+'%</span></div>';});
+  html+='<div class="nav noprint"><button class="primary" onclick="startExam()">Retake (new questions)</button>'
+     +'<button class="ghost" onclick="backToStart()">Back to start</button>'
+     +'<button class="ghost" onclick="window.print()">Print results</button></div></div>';
+  html+='<div class="card"><h2>Review &amp; explanations</h2>';
+  quiz.forEach((q,i)=>{
+    html+='<div class="rev"><div class="tag">'+q.d+'</div>'
+      +'<div style="font-weight:600;margin:4px 0 8px">'+(i+1)+'. '+esc(q.q)
+      +'<span class="badge '+(q._ok?'b-ok':'b-no')+'">'+(q._ok?'Correct':'Incorrect')+'</span></div>';
+    q.opts.forEach(op=>{
+      const chosen=q._chosen.includes(op.t);
+      let cls='opt'; if(op.correct)cls+=' correct'; else if(chosen)cls+=' wrong';
+      html+='<div class="'+cls+'"><span>'+ (op.correct?'✔ ':(chosen?'✘ ':'')) + esc(op.t)+'</span></div>';
+    });
+    html+='<div class="expl"><strong>Why:</strong> '+esc(q.e)+'</div></div>';
+  });
+  html+='</div>';
+  R.innerHTML=html; window.scrollTo(0,0);
+}
+function backToStart(){ if(window.__setExamLock) window.__setExamLock(false); document.getElementById('results').classList.add('hidden'); document.getElementById('intro').classList.remove('hidden'); window.scrollTo(0,0); }
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+</script></body></html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AWS Practice Test 1</title>
+<style>
+:root{--ink:#16191f;--navy:#232F3E;--navy2:#31465f;--orange:#FF9900;--orange-d:#EC7211;--teal:#007faa;--green:#1a7f37;--gray:#5f6b7a;--muted:#8a94a3;--light:#f2f4f7;--line:#dfe3e8;}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Amazon Ember','Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:#f6f7f9;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding:24px}
+.brand{display:inline-flex;align-items:center;gap:9px;vertical-align:middle}
+.brand .cube{width:26px;height:26px;border-radius:6px;background:var(--navy);position:relative;display:inline-block}
+.brand .cube::after{content:"";position:absolute;left:5px;right:5px;bottom:6px;height:4px;border-radius:2px;background:var(--orange)}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(16,25,40,.05)}
+h1{font-size:26px;margin:.2em 0}
+h2{font-size:19px;margin:.4em 0}
+.sub{color:var(--gray);font-size:15px}
+.pill{display:inline-block;background:var(--light);border-radius:999px;padding:4px 12px;font-size:12.5px;color:var(--navy);margin:4px 6px 0 0;font-weight:600}
+button{font-family:inherit;font-size:15px;border:none;border-radius:8px;padding:11px 20px;cursor:pointer;font-weight:600}
+.primary{background:var(--orange);color:#16191f}.primary:hover{background:var(--orange-d);color:#fff}
+.ghost{background:var(--light);color:var(--ink)}.ghost:hover{background:#e4e8ee}
+.danger{background:var(--navy);color:#fff}.danger:hover{background:var(--navy2)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:17px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 12px}
+.timer.low{color:#b3261e;border-color:#b3261e}
+.progress{height:6px;background:var(--light);border-radius:3px;overflow:hidden;margin:8px 0 0}
+.progress>span{display:block;height:100%;background:var(--orange);width:0%}
+.qtext{font-size:18px;font-weight:600;margin:6px 0 18px}
+.opt{display:flex;align-items:flex-start;gap:12px;border:1.5px solid var(--line);border-radius:10px;padding:14px 16px;margin:10px 0;cursor:pointer;transition:.12s}
+.opt:hover{border-color:var(--orange);background:#fff8ef}
+.opt.sel{border-color:var(--orange);background:#fff3e0}
+.opt input{margin-top:3px;transform:scale(1.15);accent-color:var(--orange-d)}
+.opt.correct{border-color:var(--green);background:#eaf6ec}
+.opt.wrong{border-color:#b3261e;background:#fdeceb}
+.tag{font-size:12px;color:var(--muted);font-weight:600}
+.nav{display:flex;gap:10px;justify-content:space-between;margin-top:22px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:7px;margin-top:8px}
+.gcell{height:38px;border-radius:7px;border:1px solid var(--line);background:#fff;font-weight:600;font-size:13px;cursor:pointer;color:var(--gray)}
+.gcell.answered{background:var(--navy);color:#fff;border-color:var(--navy)}
+.gcell.flagged{background:var(--orange);color:#16191f;border-color:var(--orange)}
+.gcell.current{outline:3px solid var(--ink);outline-offset:1px}
+.flagbtn{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--gray)}
+.flagbtn.on{background:var(--orange);border-color:var(--orange);color:#16191f}
+.scorebig{font-size:64px;font-weight:800;line-height:1}
+.result-banner{border-radius:12px;padding:22px 26px;color:#fff;margin-bottom:20px}
+.pass{background:linear-gradient(135deg,#0f6b2f,#1a7f37)}
+.fail{background:linear-gradient(135deg,#8a2410,#c23b22)}
+.dbar{background:var(--light);border-radius:6px;height:22px;overflow:hidden;margin:4px 0 12px}
+.dbar>span{display:block;height:100%;background:var(--teal);color:#fff;font-size:12px;font-weight:700;text-align:right;padding-right:8px;line-height:22px;white-space:nowrap}
+.rev{border:1px solid var(--line);border-radius:10px;padding:16px;margin:12px 0}
+.rev.unscored{border-style:dashed;background:#fbfcfd}
+.rev .expl{background:var(--light);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--gray);margin-top:10px}
+.badge{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:2px 9px;margin-left:8px}
+.b-ok{background:#d7ecdc;color:#0f6b2f}.b-no{background:#fdd8d3;color:#8a2410}.b-uns{background:#e5e9ef;color:#5f6b7a}
+small.k{color:var(--muted)}
+.hidden{display:none}
+@media print{.noprint{display:none}body{background:#fff}}
+.namebox{display:grid;gap:12px;max-width:440px;margin:18px 0 4px}
+.namebox label{font-size:13px;font-weight:700;color:var(--gray);margin-bottom:-6px}
+.namebox input{font-family:inherit;font-size:15px;padding:11px 13px;border:1.5px solid var(--line);border-radius:8px;color:var(--ink)}
+.namebox input:focus{outline:none;border-color:var(--orange);background:#fff8ef}
+.saventc{font-size:13px;color:var(--muted);margin-top:6px}
+.note{background:#fff8ef;border:1px solid #ffe2b8;border-radius:10px;padding:12px 14px;font-size:14px;color:#7a4b00;margin:14px 0}
+/* --- exam lockdown --- */
+body.exam-locked, body.exam-locked *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none;}
+</style></head><body><div class="wrap">
+
+<!-- INTRO -->
+<div id="intro" class="card">
+  <div><span class="brand"><span class="cube"></span><span class="tag">AWS CLOUD PRACTITIONER · PRACTICE TEST 1</span></span></div>
+  <h1>AWS Practice Test 1</h1>
+  <p class="sub">Course modules 5–8 · Compute, storage &amp; databases · integration &amp; DevOps · AI/analytics &amp; migration · billing &amp; pricing</p>
+  <div style="margin:14px 0"><span class="pill">65 questions</span><span class="pill">50 scored + 15 unscored</span><span class="pill">90-minute timer</span><span class="pill">Scaled /1000</span><span class="pill">Pass = 700</span><span class="pill">Modules 5–8</span></div>
+  <h2>How this works</h2>
+  <p class="sub">This practice test mirrors the real AWS Certified Cloud Practitioner (CLF-C02) format: 65 questions in 90 minutes, of which 50 are scored and 15 are unscored pretest items — you won&rsquo;t know which is which, exactly like the real exam. Only the 50 scored questions count toward a scaled score out of 1000, where 700 is a pass (this mock weights all scored questions equally, so 35 correct = 700). Questions are drawn at random from a larger bank across the four course modules and reshuffled each attempt. Multiple-response questions must be fully correct to earn the point. You can flag questions and revisit them before submitting. At the end you get a pass/fail result, a per-module breakdown and full explanations.</p>
+  <div class="namebox">
+    <label for="fname">First name</label>
+    <input id="fname" type="text" autocomplete="given-name" placeholder="e.g. Thandi" required>
+    <label for="sname">Surname</label>
+    <input id="sname" type="text" autocomplete="family-name" placeholder="e.g. Mokoena" required>
+  </div>
+  <div style="margin-top:20px"><button class="primary" onclick="beginExam()">Start exam &rarr;</button></div>
+</div>
+
+<!-- EXAM -->
+<div id="exam" class="hidden">
+  <div class="bar noprint">
+    <div><strong id="qcount"></strong> <small class="k">&middot; answered <span id="ansN">0</span>/65</small></div>
+    <div class="timer" id="timer">90:00</div>
+  </div>
+  <div class="progress noprint"><span id="pbar"></span></div>
+  <div class="card" style="margin-top:14px">
+    <div class="tag" id="qmeta"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="nav">
+      <button class="ghost" onclick="prev()">&larr; Previous</button>
+      <button class="flagbtn" id="flagbtn" onclick="toggleFlag()">&#9873; Flag for review</button>
+      <button class="primary" id="nextbtn" onclick="next()">Next &rarr;</button>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="bar"><strong>Question navigator</strong>
+      <button class="danger" onclick="trySubmit()">Review &amp; submit</button></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="results" class="hidden"></div>
+
+</div>
+<script>
+/* Exam keyboard/selection lockdown */
+(function(){
+  var locked=false;
+  function stopKey(e){ if(!locked) return; e.preventDefault(); e.stopPropagation(); return false; }
+  function stopIfLocked(e){ if(locked){ e.preventDefault(); } }
+  ['keydown','keypress','keyup'].forEach(function(t){ document.addEventListener(t, stopKey, true); });
+  ['selectstart','contextmenu','copy','cut','dragstart'].forEach(function(t){ document.addEventListener(t, stopIfLocked, true); });
+  window.__setExamLock=function(on){
+    locked=!!on;
+    if(document.body){ document.body.classList.toggle('exam-locked', locked); }
+    if(locked && document.activeElement && document.activeElement.blur){ try{ document.activeElement.blur(); }catch(e){} }
+  };
+})();
+
+const QUESTIONS_ALL = [{"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "An EC2 instance is named m5.large. What does the letter 'm' indicate?", "o": ["The generation", "The instance family", "The size", "The Region"], "a": [1], "e": "In m5.large, 'm' is the family (general purpose), '5' is the generation, and 'large' is the size."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "A workload does sustained, consistently heavy CPU processing (media transcoding). Which EC2 instance family fits best?", "o": ["T family (burstable)", "C family (compute optimised)", "R family (memory optimised)", "I family (storage optimised)"], "a": [1], "e": "Sustained high CPU maps to the Compute-optimised C family; the T family is for bursty, mostly-idle workloads."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "An in-memory database such as Redis or SAP HANA needs a large amount of RAM per vCPU. Which instance family is designed for this?", "o": ["General purpose (M)", "Compute optimised (C)", "Memory optimised (R, X, z1d)", "Accelerated (P, G)"], "a": [2], "e": "Memory-optimised families (R, X, z1d) offer a high memory-to-CPU ratio for large caches and in-memory databases."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "A small web app is mostly idle but occasionally spikes. Which EC2 family is the most cost-effective match?", "o": ["T family (burstable)", "C family", "R family", "P family"], "a": [0], "e": "T-family burstable instances earn CPU credits while idle and spend them to burst — ideal for unpredictable spikes with low average utilisation."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "How do burstable (T family) instances handle CPU above their baseline?", "o": ["They throttle to zero", "They earn CPU credits while idle and spend them to burst", "They automatically switch to a C instance", "They add more vCPUs permanently"], "a": [1], "e": "T instances accumulate CPU credits during idle periods and consume them to burst above baseline."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Which storage option provides the highest IOPS and lowest latency but loses its data when the instance stops or is terminated?", "o": ["Amazon EBS", "Instance store", "Amazon EFS", "Amazon S3"], "a": [1], "e": "Instance store is local NVMe on the host — fastest, but ephemeral: data is lost on stop/terminate (it survives a reboot)."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "A single EC2 instance needs a persistent boot volume that survives reboots and can be snapshotted. Which service is appropriate?", "o": ["Instance store", "Amazon EBS", "Amazon EFS", "Amazon S3"], "a": [1], "e": "EBS is network-attached block storage that persists independently of the instance and snapshots to S3."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Thousands of EC2 instances across multiple Availability Zones must read and write the same POSIX file system simultaneously. Which service fits?", "o": ["Amazon EBS", "Instance store", "Amazon EFS", "Amazon S3"], "a": [2], "e": "EFS is a managed shared file system mounted by many instances across AZs, scaling capacity automatically."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Which statement about Amazon S3 durability is correct?", "o": ["It offers 99% durability in a single AZ", "It offers 11 nines of durability across multiple AZs", "Durability depends on the instance type", "Objects are stored on a single disk"], "a": [1], "e": "S3 provides eleven 9s (99.999999999%) of durability by replicating objects across multiple AZs."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Data is temporary, already replicated elsewhere, and needs the absolute fastest I/O. Which storage type is the engineer's choice?", "o": ["Instance store", "EBS gp3", "EFS", "S3 Standard"], "a": [0], "e": "When data is disposable/replicated and needs maximum I/O, instance store is chosen despite being ephemeral."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Which S3 storage class automatically moves objects between access tiers as usage changes, with no operational effort?", "o": ["S3 Standard", "S3 Intelligent-Tiering", "S3 One Zone-IA", "S3 Glacier Deep Archive"], "a": [1], "e": "S3 Intelligent-Tiering auto-moves objects between tiers based on changing access patterns — ideal for unknown/changing patterns."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Archived data is rarely accessed (e.g. quarterly) but must still be retrievable in milliseconds when needed. Which class fits?", "o": ["S3 Standard-IA", "S3 Glacier Instant Retrieval", "S3 Glacier Flexible Retrieval", "S3 Glacier Deep Archive"], "a": [1], "e": "'Instantly/immediately' + 'rarely accessed' points to Glacier Instant Retrieval, which keeps millisecond retrieval."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Which S3 storage class is the cheapest and is designed for 7–10+ year compliance data with retrieval times up to 12 hours?", "o": ["S3 Standard-IA", "S3 Glacier Flexible Retrieval", "S3 Glacier Deep Archive", "S3 Intelligent-Tiering"], "a": [2], "e": "Glacier Deep Archive is the lowest-cost class, with retrieval up to ~12 hours — for long-term compliance archives."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "What do S3 Lifecycle policies let you do without writing any application code?", "o": ["Encrypt objects with customer keys", "Transition and expire objects automatically by age", "Replicate a bucket to another account", "Serve objects through a CDN"], "a": [1], "e": "Lifecycle rules configured on a bucket/prefix transition objects between classes and expire them based on age — no code."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Which AWS database service is a relational engine supporting MySQL, PostgreSQL, MariaDB, SQL Server and Oracle?", "o": ["Amazon DynamoDB", "Amazon RDS", "Amazon Redshift", "Amazon ElastiCache"], "a": [1], "e": "Amazon RDS is the managed relational service supporting those five engines."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "A workload needs massive, key-based throughput with single-digit-millisecond latency and virtually unlimited scale. Which database fits?", "o": ["Amazon RDS", "Amazon Aurora", "Amazon DynamoDB", "Amazon Redshift"], "a": [2], "e": "DynamoDB is a serverless NoSQL key-value/document store delivering single-digit-ms latency at any scale."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Analysts need to run complex analytical queries across years of historical data. Which purpose-built service is designed for this (OLAP)?", "o": ["Amazon DynamoDB", "Amazon Redshift", "Amazon ElastiCache", "Amazon RDS"], "a": [1], "e": "Redshift is a columnar data-warehouse (OLAP) service for complex analytics over large historical datasets."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "You want to reduce load on a relational database by serving repeated reads from a sub-millisecond in-memory layer. Which service?", "o": ["Amazon Redshift", "Amazon ElastiCache", "Amazon Aurora", "Amazon S3"], "a": [1], "e": "ElastiCache (Redis/Memcached) provides a sub-millisecond caching layer that shields the primary database from repeated reads."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Which is an advantage of Amazon Aurora over standard Amazon RDS?", "o": ["It supports Oracle and SQL Server", "Up to 15 read replicas with lower replication lag", "It is the cheapest option for all workloads", "It requires no storage at all"], "a": [1], "e": "Aurora supports up to 15 read replicas (RDS: 5) with single-digit-ms replication lag and faster failover."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Aurora stores how many copies of your data, and across how many Availability Zones?", "o": ["3 copies across 2 AZs", "6 copies across 3 AZs", "2 copies across 1 AZ", "10 copies across 5 AZs"], "a": [1], "e": "Aurora's shared distributed storage layer keeps 6 copies of data across 3 Availability Zones."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "A dev/test database has intermittent, spiky traffic and you want the most cost-effective option that scales capacity automatically. Which fits?", "o": ["Aurora Serverless v2", "A large Redshift cluster", "Provisioned RDS with max instance size", "Instance store on EC2"], "a": [0], "e": "Aurora Serverless v2 scales capacity in fine-grained steps for intermittent/spiky loads — 'intermittent traffic, most cost-effective'."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "Which Auto Scaling policy works like a thermostat — you set a metric target (e.g. 'keep average CPU at 50%') and the group holds it?", "o": ["Step scaling", "Target tracking", "Scheduled scaling", "Manual scaling"], "a": [1], "e": "Target tracking maintains a chosen metric at a target value; it is the most common ASG policy."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "You know traffic peaks every weekday at 9 a.m. and want to raise capacity just before that time. Which scaling policy is best?", "o": ["Target tracking", "Step scaling", "Scheduled scaling", "Spot scaling"], "a": [2], "e": "Scheduled scaling changes capacity at known times, ahead of predictable peaks."}, {"b": "M5", "d": "Module 5 · Compute, Storage & Databases", "q": "What is the canonical AWS answer for elastic, self-healing, highly available compute across multiple AZs?", "o": ["A single large EC2 instance", "An Auto Scaling Group behind an Elastic Load Balancer", "Instance store volumes", "A Redshift cluster"], "a": [1], "e": "ASG + Elastic Load Balancer across AZs gives elastic, self-healing, highly available compute."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "What problem does Amazon SQS primarily solve?", "o": ["It encrypts data at rest", "It decouples producers from consumers so a slow/failed consumer doesn't drag the producer down", "It provides a relational database", "It runs container images"], "a": [1], "e": "SQS breaks tight coupling: producers send and move on; consumers process at their own pace; messages wait safely."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "A banking workload must process messages exactly once and in strict order within a group. Which SQS queue type is required?", "o": ["Standard queue", "FIFO queue", "Dead-letter queue", "Priority queue"], "a": [1], "e": "FIFO queues give exactly-once processing and strict first-in-first-out ordering within a message group."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "A Standard SQS queue offers which delivery and ordering guarantees?", "o": ["Exactly-once, strict ordering", "At-least-once delivery, best-effort ordering", "At-most-once, no duplicates", "Exactly-once, no ordering"], "a": [1], "e": "Standard queues provide at-least-once delivery with best-effort ordering and near-unlimited throughput — make processing idempotent."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "A malformed 'poison pill' message keeps failing and blocking an SQS queue. What should you configure?", "o": ["A larger visibility timeout only", "A dead-letter queue (DLQ)", "A FIFO queue", "An SNS topic"], "a": [1], "e": "A DLQ receives messages that fail a defined number of times, moving them aside so healthy messages keep flowing."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "What is the SQS visibility timeout?", "o": ["The time a queue can hold a message before deletion", "The period a retrieved message is hidden from other consumers until deleted or it reappears", "The maximum message size", "The delay before a message is first delivered"], "a": [1], "e": "When a consumer retrieves a message SQS hides it for a set period; if not deleted in time it reappears — enabling at-least-once delivery."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "One 'order placed' event must be delivered simultaneously to a fulfilment queue, an analytics queue and an email Lambda, with the publisher unaware of them. Which service fits?", "o": ["Amazon SQS", "Amazon SNS", "AWS Step Functions", "Amazon RDS"], "a": [1], "e": "SNS is push-based pub/sub fan-out: one message to a topic is delivered to every subscriber."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "You need to route events to different targets based on the content of the event payload (e.g. status = FAILED vs COMPLETED). Which service is designed for this?", "o": ["Amazon SQS", "Amazon SNS", "Amazon EventBridge", "Amazon EFS"], "a": [2], "e": "EventBridge does content-based routing on an event bus, plus scheduled (cron-like) rules and many AWS integrations."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which messaging service is pull-based (consumers retrieve messages) rather than push-based?", "o": ["Amazon SNS", "Amazon SQS", "Amazon EventBridge", "Amazon Polly"], "a": [1], "e": "SQS is point-to-point and pull-based; SNS and EventBridge are push-based."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "In an AWS CI/CD pipeline, which service compiles code, runs tests and produces deployable artifacts in temporary build environments?", "o": ["CodeCommit", "CodeBuild", "CodeDeploy", "CodePipeline"], "a": [1], "e": "CodeBuild builds/compiles/tests and outputs artifacts in auto-scaling, temporary environments — no build server to maintain."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which service automates deployments to EC2, Lambda or ECS using in-place, blue/green and canary strategies?", "o": ["CodeCommit", "CodeBuild", "CodeDeploy", "CloudFormation"], "a": [2], "e": "CodeDeploy handles the deployment stage with in-place, blue/green and canary strategies."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which service orchestrates the overall CI/CD workflow (Source → Build → Test → Deploy) and can add manual approval gates?", "o": ["CodeBuild", "CodeDeploy", "CodePipeline", "CodeCommit"], "a": [2], "e": "CodePipeline defines the stages, invokes the other tools in order, and adds approval gates."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which AWS-native, declarative Infrastructure-as-Code service uses JSON/YAML templates and offers drift detection?", "o": ["AWS CDK", "Terraform", "AWS CloudFormation", "AWS CodeBuild"], "a": [2], "e": "CloudFormation is the AWS-native declarative IaC service; drift detection flags manual changes that diverge from the template."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "A team wants to define infrastructure using real programming languages like Python or TypeScript, with loops and reusable constructs. Which tool fits?", "o": ["AWS CloudFormation", "AWS CDK", "AWS Budgets", "Amazon Athena"], "a": [1], "e": "The AWS CDK lets you define infra in real languages; it synthesises into a CloudFormation template under the hood."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which IaC tool is third-party, cloud-agnostic, uses HCL, and maintains its own state file separate from AWS?", "o": ["CloudFormation", "AWS CDK", "Terraform", "CodeDeploy"], "a": [2], "e": "HashiCorp Terraform uses HCL, works across clouds via providers, and keeps its own state file — best for multi-cloud consistency."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which CloudWatch feature scans centralised logs for a pattern (e.g. 'ERROR') and turns matches into a metric that can trigger an alarm?", "o": ["A dashboard", "A metric filter", "A canary", "A budget"], "a": [1], "e": "A CloudWatch Logs metric filter matches a log pattern and produces a metric that alarms can watch."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "What is the CloudWatch automation chain that lets a system react to problems without a human?", "o": ["Log → dashboard → email", "Metric → alarm → SNS / Auto Scaling / Lambda", "Budget → anomaly → report", "Metric → snapshot → archive"], "a": [1], "e": "A metric feeds an alarm which triggers SNS, Auto Scaling, or an EventBridge/Lambda action — automated reaction."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "You must give administrators shell access to EC2 instances without opening port 22/3389 or managing SSH keys. Which Systems Manager capability fits?", "o": ["Parameter Store", "Session Manager", "Patch Manager", "EventBridge"], "a": [1], "e": "SSM Session Manager provides shell access via IAM with no open inbound ports or key pairs — a frequently tested fact."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which Systems Manager capability provides secure, hierarchical storage for configuration values and secrets (encrypted with KMS) retrieved at runtime?", "o": ["Session Manager", "Parameter Store", "Patch Manager", "Step Functions"], "a": [1], "e": "SSM Parameter Store holds connection strings, API keys and flags, KMS-encrypted, so credentials aren't hard-coded."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which Systems Manager capability automates OS/application patching against defined baselines and maintenance windows?", "o": ["Parameter Store", "Session Manager", "Patch Manager", "CloudFormation"], "a": [2], "e": "SSM Patch Manager automates patching against baselines/maintenance windows — the customer's guest-OS patching duty."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "A multi-step workflow needs sequencing, automatic retries with backoff, conditional branching, human-approval steps and a visual view of progress. Which service fits?", "o": ["Plain AWS Lambda", "AWS Step Functions", "Amazon SQS", "Amazon SNS"], "a": [1], "e": "Step Functions defines a state machine (Amazon States Language) with built-in sequencing, retries, branching and a visual graph."}, {"b": "M6", "d": "Module 6 · Integration & DevOps", "q": "Which scenario is best served by a single plain Lambda function rather than Step Functions?", "o": ["A multi-step order-fulfilment process with approvals", "A single function reacting to a single event", "A workflow needing visual progress tracking", "A long-running process exceeding Lambda's duration limit"], "a": [1], "e": "A single function reacting to a single event is plain Lambda; multi-step orchestrated workflows call for Step Functions."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which AWS AI service analyses images and video for objects, faces, scenes and content moderation?", "o": ["Amazon Textract", "Amazon Rekognition", "Amazon Comprehend", "Amazon Polly"], "a": [1], "e": "Rekognition handles general image/video content analysis, including content moderation."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "You need to extract text, forms and tables (key-value pairs) from scanned or handwritten documents. Which service fits best?", "o": ["Amazon Rekognition", "Amazon Textract", "Amazon Translate", "Amazon Lex"], "a": [1], "e": "Textract extracts text, forms and tables from documents — the classic distractor against Rekognition (general images)."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service performs NLP tasks such as sentiment analysis, entity and key-phrase extraction — e.g. classifying support tickets by tone?", "o": ["Amazon Comprehend", "Amazon Polly", "Amazon Transcribe", "Amazon Forecast"], "a": [0], "e": "Comprehend is the NLP service for sentiment, entities, key phrases and language detection."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service converts written text into lifelike speech (text-to-speech)?", "o": ["Amazon Transcribe", "Amazon Polly", "Amazon Lex", "Amazon Comprehend"], "a": [1], "e": "Polly is text-to-speech; Transcribe is the reverse (speech-to-text)."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service produces speech-to-text transcripts with timestamps and speaker identification (e.g. searchable call transcripts)?", "o": ["Amazon Polly", "Amazon Transcribe", "Amazon Translate", "Amazon Textract"], "a": [1], "e": "Transcribe converts audio to text with timestamps and speaker ID."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service is used to build the conversation flow of a voice/text chatbot?", "o": ["Amazon Lex", "Amazon Polly", "Amazon Comprehend", "Amazon Personalize"], "a": [0], "e": "Lex builds conversational chatbots (the conversation flow); add Translate and Polly for multilingual voice."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service gives real-time product recommendations on an e-commerce site?", "o": ["Amazon Forecast", "Amazon Personalize", "Amazon Comprehend", "Amazon Rekognition"], "a": [1], "e": "Personalize provides real-time recommendations; Forecast does time-series prediction."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "A company wants to detect fraud patterns unique to its own historical transaction data. Which choice does the wording signal?", "o": ["A pre-built AI service", "A custom SageMaker model", "AWS Marketplace generic model", "Amazon Polly"], "a": [1], "e": "'Our own historical data / patterns specific to us' signals a custom model built with SageMaker, not a pre-built service."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "In SageMaker, what do you pay for during model training?", "o": ["A fixed monthly platform fee", "Only the training time (infrastructure is provisioned then torn down)", "Per prediction request", "Nothing — training is free"], "a": [1], "e": "SageMaker provisions compute for training, then tears it down; you pay only for training duration."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "A team with no data scientists wants to build a custom model from tabular data with minimal configuration. Which SageMaker features help?", "o": ["Autopilot and Canvas", "Data Wrangler only", "Ground Truth only", "Neptune"], "a": [0], "e": "SageMaker Autopilot and Canvas automatically build and tune models from tabular data with minimal ML expertise."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "A custom, low-latency application must process each streaming record as it arrives, with multiple independent consumers. Which service fits?", "o": ["Kinesis Data Firehose", "Kinesis Data Streams", "Amazon S3", "AWS Glue"], "a": [1], "e": "Kinesis Data Streams uses shards and lets multiple consumers read the same stream within seconds for custom real-time apps."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "You need a fully managed 'fire-and-forget' pipeline to load streaming data into S3 or Redshift with no shard management. Which service fits?", "o": ["Kinesis Data Streams", "Kinesis Data Firehose", "Amazon EMR", "Amazon Athena"], "a": [1], "e": "Firehose is a managed delivery pipeline into S3/Redshift/OpenSearch with optional Lambda transformation and no shards."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "In a data lake, which service crawls raw S3 data to populate a catalog of schemas and can run serverless ETL jobs?", "o": ["Amazon Athena", "AWS Glue", "Amazon QuickSight", "Amazon Redshift"], "a": [1], "e": "Glue provides the Data Catalog (metadata) and serverless Spark ETL jobs; the data itself stays in S3."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service runs serverless standard SQL directly against data in S3, priced per query by data scanned?", "o": ["Amazon Redshift", "Amazon Athena", "Amazon EMR", "AWS Glue"], "a": [1], "e": "Athena queries S3 in place using the Glue Catalog, priced per data scanned — ideal for ad-hoc analysis."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service provides no-code BI dashboards and reports for business users, connecting to Athena, Redshift, RDS and S3?", "o": ["AWS Glue", "Amazon QuickSight", "Amazon Kinesis", "Amazon Comprehend"], "a": [1], "e": "QuickSight is the BI/dashboarding service for business users."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Analytics differ mainly by where the data lives. Which fits 'data stays in S3, queried occasionally, pay per scan'?", "o": ["Redshift", "Athena", "EMR", "DynamoDB"], "a": [1], "e": "Athena: data in S3, occasional/ad-hoc queries, per-scan pricing. Redshift = loaded warehouse; EMR = cluster frameworks."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "A large-scale big-data job needs specific open-source frameworks (Spark, Hive, Presto) and cluster-level control. Which service fits?", "o": ["Amazon Athena", "Amazon EMR", "Amazon QuickSight", "Amazon RDS"], "a": [1], "e": "EMR runs Spark/Hadoop/Hive/Presto on clusters you control — for large custom big-data jobs."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which migration service performs a lift-and-shift 'rehost' by continuously replicating source server disks to AWS for a minimal-downtime cutover to EC2?", "o": ["Database Migration Service (DMS)", "Application Migration Service (MGN)", "Schema Conversion Tool (SCT)", "DataSync"], "a": [1], "e": "MGN continuously replicates whole servers (physical/virtual/other-cloud) for a minimal-downtime rehost to EC2."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service migrates databases with a full load plus Change Data Capture, keeping the target in sync until cutover?", "o": ["Application Migration Service (MGN)", "Database Migration Service (DMS)", "Transfer Family", "Snowball"], "a": [1], "e": "DMS does a full load then CDC to keep the target synced with the live source until cutover; supports homogeneous and heterogeneous moves."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "You are moving from Oracle to PostgreSQL (a heterogeneous migration). Which tool converts tables, views and stored procedures to the target engine's syntax?", "o": ["Schema Conversion Tool (SCT)", "DataSync", "MGN", "QuickSight"], "a": [0], "e": "The Schema Conversion Tool partners with DMS on heterogeneous moves, converting schema/code and flagging manual work."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "A petabyte-scale dataset must reach AWS but the network would take weeks. Which option is appropriate?", "o": ["DataSync over the internet", "A Snow Family physical device", "Transfer Family (SFTP)", "Kinesis Firehose"], "a": [1], "e": "When network transfer would take too long, ship a Snow Family device; DataSync is for transfers the network can finish in time."}, {"b": "M7", "d": "Module 7 · AI/ML, Analytics & Migration", "q": "Which service provides automated, online transfer between on-prem NFS/SMB and S3, EFS or FSx with scheduling and integrity checks?", "o": ["AWS DataSync", "AWS Snowmobile", "AWS Transfer Family", "AWS DMS"], "a": [0], "e": "DataSync automates online file transfer between on-prem storage and AWS with built-in scheduling and validation."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which AWS Support plan is free and included with every account?", "o": ["Basic", "Developer", "Business", "Enterprise"], "a": [0], "e": "The Basic plan is free: account/billing support, core Trusted Advisor checks, docs and forums."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "At which support plan do the FULL set of Trusted Advisor checks (all five categories) first become available?", "o": ["Basic", "Developer", "Business", "Enterprise"], "a": [2], "e": "Full Trusted Advisor checks start at the Business plan; Basic/Developer get only core checks."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "A mission-critical workload needs a dedicated Technical Account Manager (TAM) and Infrastructure Event Management. Which plan is required?", "o": ["Developer", "Business", "Enterprise", "Basic"], "a": [2], "e": "A dedicated TAM and Infrastructure Event Management are Enterprise-only."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "A small team needs business-hours email guidance from Cloud Support Associates for non-production work. Which plan is the cheapest fit?", "o": ["Basic", "Developer", "Business", "Enterprise"], "a": [1], "e": "The Developer plan (from $29/mo) gives business-hours email access for small teams and non-production work."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which AWS tool is used to VISUALISE and investigate spend and usage over time, filtering by service, account, Region or tag?", "o": ["AWS Budgets", "AWS Cost Explorer", "AWS Pricing Calculator", "Trusted Advisor"], "a": [1], "e": "Cost Explorer analyses and visualises spend/usage over time and can forecast future costs."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which tool lets you set a cost or usage threshold and get alerted (or trigger an action) when it is breached or forecast to be?", "o": ["Cost Explorer", "AWS Budgets", "Pricing Calculator", "CloudTrail"], "a": [1], "e": "AWS Budgets sets thresholds and notifies via SNS/email, and can trigger automated actions on breach."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which feature uses machine learning to automatically flag unusual spending without you setting manual thresholds?", "o": ["Cost Anomaly Detection", "AWS Budgets", "Trusted Advisor", "Consolidated billing"], "a": [0], "e": "Cost Anomaly Detection (part of Cost Explorer) uses ML to flag unusual spend automatically."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which compute pricing model offers the deepest discount (up to ~90%) but can be reclaimed with a two-minute warning?", "o": ["On-Demand", "Reserved Instances", "Savings Plans", "Spot Instances"], "a": [3], "e": "Spot Instances use spare capacity at up to 90% off but can be reclaimed — only for interruption-tolerant work."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "A steady workload needs discounts that stay flexible across instance family, size, Region, and even Fargate and Lambda. Which model fits best?", "o": ["Standard Reserved Instances", "Compute Savings Plans", "Spot Instances", "On-Demand"], "a": [1], "e": "Compute Savings Plans commit to $/hour of compute and apply across families, sizes, Regions, EC2, Fargate and Lambda."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which pricing model is the flexible baseline with no commitment and the highest unit price, used as the yardstick for measuring savings?", "o": ["On-Demand", "Reserved Instances", "Savings Plans", "Spot"], "a": [0], "e": "On-Demand has no commitment and the highest unit price; all savings are measured against it."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Reserved Instances require what kind of commitment?", "o": ["No commitment, pay per second", "A 1- or 3-year commitment to instance attributes", "A two-minute reclaimable lease", "A per-request fee"], "a": [1], "e": "RIs commit for 1 or 3 years to family/size/Region (Standard) or with in-family flexibility (Convertible)."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which free tool (no AWS account needed) lets you build a cost estimate for a proposed architecture before you deploy it?", "o": ["Cost Explorer", "AWS Pricing Calculator", "AWS Budgets", "Trusted Advisor"], "a": [1], "e": "The AWS Pricing Calculator builds estimates for planned architectures and is free with no account required."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "A parent company wants ONE invoice covering all its subsidiary accounts, with shared discounts and volume tiers. Which capability provides this?", "o": ["AWS Budgets", "AWS Organizations consolidated billing", "Cost Explorer", "Trusted Advisor"], "a": [1], "e": "Consolidated billing rolls all member accounts into one bill, aggregates volume pricing, and shares RI/Savings Plans discounts."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Under consolidated billing, how do Reserved Instance and Savings Plans discounts behave across linked accounts?", "o": ["They apply only to the buying account", "They automatically apply to matching usage in any linked account (unless sharing is disabled)", "They must be re-purchased per account", "They expire monthly"], "a": [1], "e": "Commitments bought in one account apply to matching usage in any other account, unless sharing is switched off."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Activating which feature lets you break down spend by team or project (e.g. CostCentre: Marketing) in Cost Explorer and billing reports?", "o": ["Cost Allocation Tags", "Service Control Policies", "Metric filters", "Savings Plans"], "a": [0], "e": "Cost Allocation Tags let you attribute spend to teams/projects for chargeback or showback."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which Trusted Advisor category flags idle/underutilised EC2 instances and unattached EBS volumes?", "o": ["Security", "Performance", "Cost Optimisation", "Fault Tolerance"], "a": [2], "e": "Cost Optimisation checks surface idle resources and RI/Savings Plans opportunities."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which Trusted Advisor category checks open security-group ports, root-account MFA and S3 bucket permissions?", "o": ["Security", "Performance", "Service Limits", "Fault Tolerance"], "a": [0], "e": "The Security category checks open ports, root MFA/IAM configuration and S3 permissions."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "Which of these are the five Trusted Advisor check categories? (Choose the complete set.)", "o": ["Cost, Performance, Security, Fault Tolerance, Service Limits", "Cost, Speed, Encryption, Backup, Networking", "Compute, Storage, Database, Network, Billing", "Availability, Latency, Cost, Identity, Logging"], "a": [0], "e": "Trusted Advisor covers Cost Optimisation, Performance, Security, Fault Tolerance and Service Limits."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "When several answers technically work on CLF-C02, which framework is the intended tiebreaker for the 'most correct' answer?", "o": ["The Cloud Adoption Framework", "The Well-Architected Framework", "The Shared Responsibility Model", "The MoSCoW method"], "a": [1], "e": "The Well-Architected Framework is the tiebreaker: prefer the answer reflecting best practice (e.g. Parameter Store over hard-coded creds)."}, {"b": "M8", "d": "Module 8 · Billing, Pricing & Support", "q": "On the exam, qualifying phrases like 'LEAST operational overhead' or 'MOST cost-effective' should be treated as:", "o": ["Filler to ignore", "The selection criterion that decides among otherwise valid options", "A hint the question is unscored", "A sign to pick the cheapest service always"], "a": [1], "e": "These qualifiers are the actual selection criteria; CLF-C02 rewards the managed/serverless, least-effort option."}];
+const PLAN = {"M5": {"scored": 13, "unscored": 4}, "M6": {"scored": 12, "unscored": 4}, "M7": {"scored": 13, "unscored": 4}, "M8": {"scored": 12, "unscored": 3}};                 // { bucketKey: {scored:N, unscored:M} }
+const BUCKET_LABEL = "module";    // "domain" or "module"
+const TEST_NAME = "AWS Practice Test 1 (Modules 5-8)";
+
+const NUM_SHOWN = 65, NUM_SCORED = 50, TOTAL_POINTS = 1000, PASS = 700, EXAM_SECONDS = 90*60;
+let quiz=[], answers={}, flags={}, cur=0, timeLeft=EXAM_SECONDS, timerId=null;
+let examEndsAt=0, syncTimerId=null, examSubmitted=false;
+let STUDENT = {first:'', surname:''};
+
+function beginExam(){
+  const f=(document.getElementById('fname')||{}).value||'';
+  const s=(document.getElementById('sname')||{}).value||'';
+  if(!f.trim()||!s.trim()){ alert('Please enter your first name and surname before starting the exam.'); return; }
+  STUDENT={first:f.trim(), surname:s.trim()};
+  startExam();
+}
+
+function saveResult(correct,total,scaled,passed,perDomain){
+  try{
+    fetch('/api/submit',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        test: TEST_NAME, first_name: STUDENT.first, surname: STUDENT.surname,
+        correct: correct, total: total, score: scaled,
+        percent: Math.round(correct/total*100), passed: passed?1:0, domains: perDomain
+      })
+    }).then(r=>{ if(r&&r.ok){ setSaveNote('Result saved to the database \u2713'); } })
+      .catch(()=>{ setSaveNote('Result not saved \u2014 open this test through the exam server to record marks.'); });
+  }catch(e){ setSaveNote('Result not saved (offline).'); }
+}
+function setSaveNote(msg){ var el=document.getElementById('saveNote'); if(el) el.textContent=msg; }
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+// Build a 65-question paper: for each bucket take `scored`+`unscored` questions,
+// tag the scored ones, then shuffle the whole paper. Options are shuffled too,
+// with the correct answers tracked by value.
+function pickQuestions(){
+  const byBucket={};
+  QUESTIONS_ALL.forEach(q=>{ (byBucket[q.b]=byBucket[q.b]||[]).push(q); });
+  let paper=[];
+  Object.keys(PLAN).forEach(key=>{
+    const need=PLAN[key].scored+PLAN[key].unscored;
+    const pool=shuffle(byBucket[key]||[]);
+    const take=pool.slice(0,need);
+    take.forEach((q,i)=>{ paper.push({src:q, scored: i < PLAN[key].scored}); });
+  });
+  paper=shuffle(paper);
+  return paper.map(item=>{
+    const q=item.src;
+    const correctVals=q.a.map(i=>q.o[i]);
+    const opts=shuffle(q.o.map((t,i)=>({t,correct:q.a.includes(i)})));
+    return {b:q.b,d:q.d,q:q.q,e:q.e,multi:q.a.length>1,opts,correctVals,scored:item.scored};
+  });
+}
+
+function startExam(){
+  if(window.__setExamLock) window.__setExamLock(true);
+  (document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen||function(){}).call(document.documentElement);
+  examSubmitted=false;
+  quiz=pickQuestions(); answers={}; flags={}; cur=0; timeLeft=EXAM_SECONDS;
+  examEndsAt=Date.now()+EXAM_SECONDS*1000;   // optimistic; server sync overrides immediately
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('results').classList.add('hidden');
+  document.getElementById('exam').classList.remove('hidden');
+  buildGrid(); render();
+  if(timerId) clearInterval(timerId);
+  timerId=setInterval(tick,1000);
+  if(syncTimerId) clearInterval(syncTimerId);
+  syncTimerId=setInterval(function(){ syncTime(); }, 15000);
+  syncTime();
+}
+function syncTime(){
+  try{
+    fetch('/api/start',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({test:TEST_NAME,first_name:STUDENT.first,surname:STUDENT.surname})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d&&d.ok&&typeof d.remaining==='number'){
+        examEndsAt=Date.now()+d.remaining*1000;
+        if(d.remaining<=0){ submit(); return; }
+        if(timerId) tick();
+      }
+    }).catch(function(){ /* server offline: local countdown */ });
+  }catch(e){}
+}
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible' && !examSubmitted && timerId){ syncTime(); }
+});
+function tick(){
+  timeLeft=Math.max(0,Math.round((examEndsAt-Date.now())/1000));
+  renderTimer();
+  if(timeLeft<=0){ if(timerId){clearInterval(timerId);timerId=null;} submit(); }
+}
+function renderTimer(){ const m=Math.floor(timeLeft/60),s=timeLeft%60; const t=document.getElementById('timer');
+  t.textContent=m+':' + (s<10?'0':'')+s; t.classList.toggle('low',timeLeft<=300); }
+
+function buildGrid(){ const g=document.getElementById('grid'); g.innerHTML='';
+  quiz.forEach((_,i)=>{ const b=document.createElement('button'); b.className='gcell'; b.textContent=i+1;
+    b.onclick=()=>{cur=i;render();}; g.appendChild(b); }); }
+function refreshGrid(){ [...document.getElementById('grid').children].forEach((b,i)=>{
+  b.className='gcell'+(answers[i]&&answers[i].length?' answered':'')+(flags[i]?' flagged':'')+(i===cur?' current':''); }); }
+
+function render(){
+  const q=quiz[cur];
+  document.getElementById('qcount').textContent='Question '+(cur+1)+' of '+quiz.length;
+  document.getElementById('qmeta').textContent=q.d+(q.multi?'  \u00b7  select all that apply':'');
+  document.getElementById('qtext').textContent=q.q;
+  const box=document.getElementById('opts'); box.innerHTML='';
+  q.opts.forEach((op)=>{
+    const sel=(answers[cur]||[]).includes(op.t);
+    const row=document.createElement('label'); row.className='opt'+(sel?' sel':'');
+    const inp=document.createElement('input'); inp.type=q.multi?'checkbox':'radio'; inp.name='opt'; inp.checked=sel;
+    inp.onchange=()=>choose(op.t,q.multi);
+    const span=document.createElement('span'); span.textContent=op.t;
+    row.appendChild(inp); row.appendChild(span); box.appendChild(row);
+  });
+  document.getElementById('flagbtn').classList.toggle('on',!!flags[cur]);
+  document.getElementById('nextbtn').textContent = cur===quiz.length-1 ? 'Finish \u2192' : 'Next \u2192';
+  document.getElementById('pbar').style.width=((cur+1)/quiz.length*100)+'%';
+  document.getElementById('ansN').textContent=Object.values(answers).filter(a=>a&&a.length).length;
+  refreshGrid();
+}
+function choose(val,multi){
+  let a=answers[cur]||[];
+  if(multi){ a.includes(val)? a=a.filter(x=>x!==val) : a.push(val); }
+  else { a=[val]; }
+  answers[cur]=a; render();
+}
+function toggleFlag(){ flags[cur]=!flags[cur]; render(); }
+function prev(){ if(cur>0){cur--;render();} }
+function next(){ if(cur<quiz.length-1){cur++;render();} else trySubmit(); }
+function trySubmit(){
+  const unans=quiz.length-Object.values(answers).filter(a=>a&&a.length).length;
+  const msg=unans>0?('You have '+unans+' unanswered question(s). Submit anyway?'):'Submit your exam for scoring?';
+  if(confirm(msg)) submit();
+}
+function submit(){
+  if(examSubmitted) return;
+  examSubmitted=true;
+  if(window.__setExamLock) window.__setExamLock(false);
+  if(timerId){clearInterval(timerId);timerId=null;}
+  if(syncTimerId){clearInterval(syncTimerId);syncTimerId=null;}
+  let correctScored=0; const perDomain={};
+  quiz.forEach((q,i)=>{
+    const chosen=(answers[i]||[]).slice().sort();
+    const right=q.correctVals.slice().sort();
+    const ok = chosen.length===right.length && chosen.every((v,k)=>v===right[k]);
+    q._ok=ok; q._chosen=answers[i]||[];
+    if(q.scored){
+      if(!perDomain[q.d]) perDomain[q.d]={c:0,t:0};
+      perDomain[q.d].t++; if(ok){correctScored++; perDomain[q.d].c++;}
+    }
+  });
+  const scaled=Math.round(correctScored/NUM_SCORED*TOTAL_POINTS);
+  const passed=scaled>=PASS;
+  renderResults(correctScored,scaled,passed,perDomain);
+  saveResult(correctScored,NUM_SCORED,scaled,passed,perDomain);
+}
+
+function renderResults(correct,scaled,passed,perDomain){
+  document.getElementById('exam').classList.add('hidden');
+  const R=document.getElementById('results'); R.classList.remove('hidden');
+  let html='<div class="result-banner '+(passed?'pass':'fail')+'">'
+    +'<div style="font-size:14px;font-weight:700;letter-spacing:2px;opacity:.9">'+(passed?'PASS':'DID NOT PASS')+'</div>'
+    +'<div class="scorebig">'+scaled+'<span style="font-size:24px;font-weight:600">/1000</span></div>'
+    +'<div style="margin-top:6px;font-size:15px">'+correct+' of '+NUM_SCORED+' scored questions correct \u00b7 '+Math.round(correct/NUM_SCORED*100)+'% \u00b7 passing score is 700</div></div>';
+  html+='<div class="saventc" id="saveNote">Saving result\u2026</div>';
+  html+='<div class="note">Only the 50 scored questions count toward your mark \u2014 the 15 unscored pretest questions are shown below for practice but did not affect your score.</div>';
+  html+='<div class="card"><h2>Score by '+BUCKET_LABEL+' <small class="k">(scored questions only)</small></h2>';
+  Object.keys(perDomain).forEach(d=>{const o=perDomain[d];const pct=Math.round(o.c/o.t*100);
+    html+='<div style="font-size:14px;font-weight:600;margin-top:10px">'+esc(d)+' <small class="k">('+o.c+'/'+o.t+')</small></div>'
+      +'<div class="dbar"><span style="width:'+Math.max(pct,8)+'%">'+pct+'%</span></div>';});
+  html+='<div class="nav noprint"><button class="primary" onclick="startExam()">Retake (new questions)</button>'
+     +'<button class="ghost" onclick="backToStart()">Back to start</button>'
+     +'<button class="ghost" onclick="window.print()">Print results</button></div></div>';
+  html+='<div class="card"><h2>Review &amp; explanations</h2>';
+  quiz.forEach((q,i)=>{
+    const uns=!q.scored;
+    html+='<div class="rev'+(uns?' unscored':'')+'"><div class="tag">'+esc(q.d)+'</div>'
+      +'<div style="font-weight:600;margin:4px 0 8px">'+(i+1)+'. '+esc(q.q)
+      +'<span class="badge '+(q._ok?'b-ok':'b-no')+'">'+(q._ok?'Correct':'Incorrect')+'</span>'
+      +(uns?'<span class="badge b-uns">Unscored (pretest)</span>':'')+'</div>';
+    q.opts.forEach(op=>{
+      const chosen=q._chosen.includes(op.t);
+      let cls='opt'; if(op.correct)cls+=' correct'; else if(chosen)cls+=' wrong';
+      html+='<div class="'+cls+'"><span>'+ (op.correct?'\u2714 ':(chosen?'\u2718 ':'')) + esc(op.t)+'</span></div>';
+    });
+    html+='<div class="expl"><strong>Why:</strong> '+esc(q.e)+'</div></div>';
+  });
+  html+='</div>';
+  R.innerHTML=html; window.scrollTo(0,0);
+}
+function backToStart(){ if(window.__setExamLock) window.__setExamLock(false); document.getElementById('results').classList.add('hidden'); document.getElementById('intro').classList.remove('hidden'); window.scrollTo(0,0); }
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+</script></body></html>
