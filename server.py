@@ -945,6 +945,7 @@ PROCTOR_SNIPPET = """
           'throughout.</li>'+
         '<li>The timer keeps running the whole time, leaving the exam does '+
           '<strong>not</strong> pause it.</li>'+
+        '<li><span class="warn">Results will be posted on the group</span> </li>'+
       '</ul>'+
       '<label class="ack"><input type="checkbox" id="ackChk">'+
         '<span>I understand these rules and agree that any of the above will be '+
