@@ -40,7 +40,7 @@ TEST_GROUPS = [
             "duration": 90 * 60,          # 90-minute exams (real CLF-C02 length)
             "tests": [
                 ("AWS Practice Test 1 (Modules 5-8)", "aws-test1.html"),
-                ("AWS Certified Cloud Practitioner \u2014 Final Exam (CLF-C02)", "aws-final.html"),
+                ("AWS Certified Cloud Practitioner - Final Exam (CLF-C02)", "aws-final.html"),
             ],
     },
     {
@@ -931,9 +931,9 @@ PROCTOR_SNIPPET = """
     rules.id='rulesScreen';
     rules.className='card hidden';
     rules.innerHTML=
-      '<div><span class="tag">PROCTORED EXAM \u2014 RULES</span></div>'+
+      '<div><span class="tag">PROCTORED EXAM RULES</span></div>'+
       '<h1 style="margin:.2em 0">Before you begin</h1>'+
-      '<p class="sub">This attempt is proctored. Please read the rules \u2014 your '+
+      '<p class="sub">This attempt is proctored. Please read the rules, your '+
       'webcam is on and the following are automatically detected and recorded '+
       'against your result:</p>'+
       '<ul>'+
@@ -943,17 +943,15 @@ PROCTOR_SNIPPET = """
           'or windows.</span> Doing so is flagged with the method used.</li>'+
         '<li><span class="warn">Keep your camera on</span> with your face visible '+
           'throughout.</li>'+
-        '<li>The timer keeps running the whole time \u2014 leaving the exam does '+
+        '<li>The timer keeps running the whole time, leaving the exam does '+
           '<strong>not</strong> pause it.</li>'+
-        '<li>Anything flagged is saved with your mark and shown to the trainer in '+
-          'the results report.</li>'+
       '</ul>'+
       '<label class="ack"><input type="checkbox" id="ackChk">'+
         '<span>I understand these rules and agree that any of the above will be '+
         'recorded and flagged as a possible cheating attempt.</span></label>'+
       '<div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">'+
-        '<button class="primary" id="rulesBegin" disabled>Begin exam \u2192</button>'+
         '<button class="ghost" id="rulesBack">\u2190 Back</button>'+
+        '<button class="primary" id="rulesBegin" disabled>Begin exam \u2192</button>'+
       '</div>';
     intro.parentNode.insertBefore(rules, intro.nextSibling);
     var chk=rules.querySelector('#ackChk');
@@ -1020,9 +1018,8 @@ PROCTOR_SNIPPET = """
     var p=document.createElement('p');
     p.id='camNotice'; p.className='sub';
     p.style.cssText='margin-top:10px;color:#8a2410;font-weight:600';
-    p.innerHTML='\\uD83D\\uDCF7 This is a proctored, full-screen exam \\u2014 your '+
-                'camera is required. After you click <strong>Start exam</strong> '+
-                'you\\'ll allow the camera, then review the rules before beginning.';
+    p.innerHTML='This is a proctored, full-screen exam; your '+
+                'camera is required. Review the rules before beginning.';
     var nb=intro.querySelector('.namebox');
     if(nb && nb.parentNode){ nb.parentNode.insertBefore(p, nb.nextSibling); }
     else { intro.appendChild(p); }
