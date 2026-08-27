@@ -373,7 +373,6 @@ function showConfirmModal(msg, cb){
 function trySubmit(){
   const unans=quiz.length-Object.values(answers).filter(a=>a&&a.length).length;
   const msg=unans>0?('You have '+unans+' unanswered question(s). Submit anyway?'):'Submit your exam for scoring?';
-  if(confirm(msg)) submit();
   showConfirmModal(msg, confirmed=>{ if(confirmed) submit(); });
 }
 function submit(){
