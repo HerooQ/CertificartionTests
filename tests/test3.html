@@ -3,6 +3,11 @@
 <style>
 :root{--red:#F25022;--green:#7FBA00;--blue:#00A4EF;--yellow:#FFB900;--azure:#0078D4;--ink:#242424;--gray:#605E5C;--muted:#8A8886;--light:#F3F2F1;--line:#E1DFDD;}
 *{box-sizing:border-box}
+#confirmOverlay{position:fixed;inset:0;background:rgba(22,25,31,.55);z-index:9998;display:none;align-items:center;justify-content:center}
+#confirmOverlay.show{display:flex}
+#confirmBox{background:#fff;border-radius:12px;padding:22px 24px;max-width:360px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#confirmBox p{margin:0 0 18px;font-size:15px}
+#confirmBox .row{display:flex;gap:10px;justify-content:flex-end}
 body{margin:0;font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:#faf9f8;line-height:1.5}
 .wrap{max-width:860px;margin:0 auto;padding:24px}
 .logo{display:inline-grid;grid-template-columns:14px 14px;grid-gap:3px;vertical-align:middle;margin-right:10px}
@@ -106,6 +111,16 @@ body.exam-locked, body.exam-locked *{-webkit-user-select:none;-moz-user-select:n
     <div class="bar"><strong>Question navigator</strong>
       <button class="danger" onclick="trySubmit()">Review &amp; submit</button></div>
     <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<div id="confirmOverlay">
+  <div id="confirmBox">
+    <p id="confirmMsg"></p>
+    <div class="row">
+      <button class="ghost" id="confirmCancel">Cancel</button>
+      <button class="primary" id="confirmOk">Submit</button>
+    </div>
   </div>
 </div>
 
@@ -346,10 +361,20 @@ function choose(val,multi){
 function toggleFlag(){ flags[cur]=!flags[cur]; render(); }
 function prev(){ if(cur>0){cur--;render();} }
 function next(){ if(cur<quiz.length-1){cur++;render();} else trySubmit(); }
+function showConfirmModal(msg, cb){
+  const ov=document.getElementById('confirmOverlay');
+  document.getElementById('confirmMsg').textContent=msg;
+  ov.classList.add('show');
+  const ok=document.getElementById('confirmOk'), cancel=document.getElementById('confirmCancel');
+  function cleanup(result){ ov.classList.remove('show'); ok.onclick=null; cancel.onclick=null; cb(result); }
+  ok.onclick=()=>cleanup(true);
+  cancel.onclick=()=>cleanup(false);
+}
 function trySubmit(){
   const unans=quiz.length-Object.values(answers).filter(a=>a&&a.length).length;
   const msg=unans>0?('You have '+unans+' unanswered question(s). Submit anyway?'):'Submit your exam for scoring?';
   if(confirm(msg)) submit();
+  showConfirmModal(msg, confirmed=>{ if(confirmed) submit(); });
 }
 function submit(){
   if(examSubmitted) return;
