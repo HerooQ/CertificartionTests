@@ -312,7 +312,7 @@ _HEADER_SYNONYMS = {
     "test":       ["test", "exam", "test name", "paper"],
     "first_name": ["first name", "first", "firstname", "given name", "first names"],
     "surname":    ["surname", "last name", "lastname", "family name", "last"],
-    "name":       ["name", "student", "full name(s)", "student name", "candidate"],
+    "name":       ["name", "student", "full name", "student name", "candidate"],
     "correct":    ["correct", "marks", "correct answers", "score correct", "right", "raw"],
     "total":      ["total", "out of", "questions", "total questions", "max", "no. questions"],
     "score":      ["score", "scaled", "scaled score", "score /1000", "scaled /1000"],
