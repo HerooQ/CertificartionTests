@@ -34,15 +34,7 @@ DB_PATH = os.path.join(ROOT, "results.db")
 # Tests are organised into groups (rendered as sections on the landing page).
 # Each group has its own server-enforced exam length.
 TEST_GROUPS = [
-    {
-            "group": "AWS Cloud Computing",
-            "blurb": "Certified Cloud Practitioner (CLF-C02)",
-            "duration": 90 * 60,          # 90-minute exams (real CLF-C02 length)
-            "tests": [
-                ("AWS Practice Test 1 (Modules 5-8)", "aws-test1.html"),
-                ("AWS Certified Cloud Practitioner - Final Exam (CLF-C02)", "aws-final.html"),
-            ],
-    },
+    
     {
         "group": "Microsoft SC-900",
         "blurb": "Security, Compliance &amp; Identity Fundamentals",
@@ -53,6 +45,15 @@ TEST_GROUPS = [
             ("Practice Test 3 (Modules 1-18)", "test3.html"),
         ],
     },
+    {
+                "group": "AWS Cloud Computing",
+                "blurb": "Certified Cloud Practitioner (CLF-C02)",
+                "duration": 90 * 60,          # 90-minute exams (real CLF-C02 length)
+                "tests": [
+                    ("AWS Practice Test 1 (Modules 5-8)", "aws-test1.html"),
+                    ("AWS Certified Cloud Practitioner - Final Exam (CLF-C02)", "aws-final.html"),
+                ],
+        },
     
 ]
 
