@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "certprep"
+version = "2.0.0"
+description = "Proctored certification practice-exam platform with server-enforced timing and a results report. Standard library only."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+certprep = "certprep.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["certprep*"]
+
+[tool.setuptools.package-data]
+certprep = ["static/**/*", "templates/**/*"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]

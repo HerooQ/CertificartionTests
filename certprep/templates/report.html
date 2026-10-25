@@ -1,0 +1,61 @@
+<main class="wrap">
+  <nav class="noprint"><a class="btnlink ghostlink" href="/">← Tests</a></nav>
+  <h1>Results report</h1>
+  <p class="sub">All recorded attempts across the SC-900 and AWS practice tests. Flagged rows indicate possible cheating detected during a proctored attempt.</p>
+
+  <section class="stats" aria-label="Summary">$stat_cards</section>
+
+  <h2>By test</h2>
+  <table>
+    <thead><tr><th>Test</th><th>Attempts</th><th>Avg score</th><th>Pass rate</th><th>Flagged</th></tr></thead>
+    <tbody>$per_test_rows</tbody>
+  </table>
+
+  <h2>$heading</h2>
+  <div class="filterbar noprint">
+    <label for="testfilter">Filter by test</label>
+    <select id="testfilter">$filter_options</select>
+  </div>
+  <div class="toolbar noprint">
+    <a class="btnlink" href="$export_href">⬇ Export CSV</a>
+    <button type="button" class="btnlink ghostlink" id="print-btn">🖨 Print</button>
+    <button type="button" class="btnlink danger" id="delete-all-btn">🗑 Delete all shown</button>
+    <label class="autolbl"><input type="checkbox" id="autochk"> Auto-refresh (10s)</label>
+  </div>
+
+  <details class="addbox noprint">
+    <summary>➕ Add a record manually</summary>
+    <p class="sub">Use this if an attempt didn't save (e.g. a student lost connection). The scaled score, % and pass/fail are worked out for you from correct ÷ total.</p>
+    <form id="add-form" class="addgrid">
+      <label class="wide">Test<select id="a_test" name="test">$add_options</select></label>
+      <label>First name<input id="a_first" name="first_name" autocomplete="off" required></label>
+      <label>Surname<input id="a_surname" name="surname" autocomplete="off" required></label>
+      <label>Correct<input id="a_correct" name="correct" type="number" min="0" step="1" required></label>
+      <label>Total<input id="a_total" name="total" type="number" min="1" step="1" value="50" required></label>
+      <label class="wide">Comments (optional)<input id="a_comments" name="comments" autocomplete="off" placeholder="e.g. added by hand — submit failed"></label>
+      <div class="addfoot wide">
+        <button type="submit" class="btnlink">Save record</button>
+        <span id="a_msg" class="ok" role="status"></span>
+      </div>
+    </form>
+  </details>
+
+  <details class="addbox noprint">
+    <summary>📥 Import from a spreadsheet (Excel or CSV)</summary>
+    <p class="sub">Upload an <strong>.xlsx</strong> or <strong>.csv</strong> with columns <em>Test, First name, Surname, Correct, Total</em> (Comments optional). Everyone is imported clean unless a Comments column has a value. <a href="/import_template.csv">Download a template</a>.</p>
+    <form id="import-form" class="addgrid">
+      <label class="wide">Spreadsheet file<input type="file" id="imp_file" accept=".xlsx,.csv,.tsv,.txt"></label>
+      <label class="wide">Default test — used for rows whose Test cell is blank (optional)
+        <select id="imp_test"><option value="">— none —</option>$add_options</select></label>
+      <div class="addfoot wide">
+        <button type="submit" class="btnlink">Import file</button>
+        <span id="imp_msg" class="ok" role="status"></span>
+      </div>
+    </form>
+  </details>
+
+  <table>
+    <thead><tr><th>When</th><th>Student</th><th>Test</th><th>Correct</th><th>Score</th><th>%</th><th>Result</th><th>Proctoring</th><th class="noprint">Actions</th></tr></thead>
+    <tbody>$body_rows</tbody>
+  </table>
+</main>

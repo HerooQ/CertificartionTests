@@ -1,0 +1,94 @@
+{
+  "scoring": {
+    "scaleMax": 1000,
+    "passMark": 700
+  },
+  "groups": [
+    {
+      "id": "sc900",
+      "title": "Microsoft SC-900",
+      "blurb": "Security, Compliance & Identity Fundamentals",
+      "theme": "microsoft",
+      "badge": "SC-900 PRACTICE EXAM",
+      "durationMinutes": 45,
+      "description": "This mock mirrors the official SC-900: a scaled score out of 1000 with a passing bar of 700. Microsoft uses difficulty-weighted scaling; this practice test approximates it by weighting all 50 questions equally (20 points each), so 35 correct = 700. Questions are drawn at random from a larger bank and reshuffled each attempt. Multiple-response questions must be fully correct to earn points. You can flag questions and revisit them before submitting. At the end you’ll get a pass/fail result, a per-domain breakdown, and full explanations.",
+      "exams": [
+        {
+          "slug": "sc900-practice-1",
+          "name": "Practice Test 1 (Modules 1-6)",
+          "title": "Practice Test 1",
+          "subtitle": "Cumulative through Week 2 · Modules 1–6 (Security, compliance & identity concepts)",
+          "scope": "Modules 1–6",
+          "legacyFile": "test1.html",
+          "selection": { "strategy": "balanced", "scored": 50 }
+        },
+        {
+          "slug": "sc900-practice-2",
+          "name": "Practice Test 2 (Modules 1-12)",
+          "title": "Practice Test 2",
+          "subtitle": "Cumulative through Week 4 · Modules 1–12 (adds Microsoft Entra fundamentals & access)",
+          "scope": "Modules 1–12",
+          "legacyFile": "test2.html",
+          "selection": { "strategy": "balanced", "scored": 50 }
+        },
+        {
+          "slug": "sc900-practice-3",
+          "name": "Practice Test 3 (Modules 1-18)",
+          "title": "Practice Test 3",
+          "subtitle": "Cumulative through Week 6 · Modules 1–18 (adds governance, protection & Azure security)",
+          "scope": "Modules 1–18",
+          "legacyFile": "test3.html",
+          "selection": { "strategy": "balanced", "scored": 50 }
+        }
+      ]
+    },
+    {
+      "id": "aws-clf",
+      "title": "AWS Cloud Computing",
+      "blurb": "Certified Cloud Practitioner (CLF-C02)",
+      "theme": "aws",
+      "durationMinutes": 90,
+      "exams": [
+        {
+          "slug": "aws-practice-1",
+          "name": "AWS Practice Test 1 (Modules 5-8)",
+          "title": "AWS Practice Test 1",
+          "badge": "AWS CLOUD PRACTITIONER · PRACTICE TEST 1",
+          "subtitle": "Course modules 5–8 · Compute, storage & databases · integration & DevOps · AI/analytics & migration · billing & pricing",
+          "scope": "Modules 5–8",
+          "legacyFile": "aws-test1.html",
+          "description": "This practice test mirrors the real AWS Certified Cloud Practitioner (CLF-C02) format: 65 questions in 90 minutes, of which 50 are scored and 15 are unscored pretest items — you won’t know which is which, exactly like the real exam. Only the 50 scored questions count toward a scaled score out of 1000, where 700 is a pass (this mock weights all scored questions equally, so 35 correct = 700). Questions are drawn at random from a larger bank across the four course modules and reshuffled each attempt. Multiple-response questions must be fully correct to earn the point. You can flag questions and revisit them before submitting. At the end you get a pass/fail result, a per-module breakdown and full explanations.",
+          "selection": {
+            "strategy": "planned",
+            "bucketLabel": "module",
+            "plan": {
+              "M5": { "scored": 13, "unscored": 4 },
+              "M6": { "scored": 12, "unscored": 4 },
+              "M7": { "scored": 13, "unscored": 4 },
+              "M8": { "scored": 12, "unscored": 3 }
+            }
+          }
+        },
+        {
+          "slug": "aws-final",
+          "name": "AWS Certified Cloud Practitioner - Final Exam (CLF-C02)",
+          "title": "AWS Certified Cloud Practitioner - Final Exam",
+          "badge": "AWS CLOUD PRACTITIONER · FINAL EXAM (CLF-C02)",
+          "subtitle": "Full CLF-C02 mock · questions distributed across the four official exam domains by their real weightings",
+          "legacyFile": "aws-final.html",
+          "description": "This is a full CLF-C02 mock exam. Like the real exam it has 65 questions in 90 minutes; 50 scored plus 15 unscored pretest items you can’t identify, and reports a scaled score out of 1000 with 700 to pass (this mock weights all 50 scored questions equally, so 35 correct = 700). Crucially, the 50 scored questions are distributed across the four official domains by their real weightings: Cloud Concepts 24% (12 questions), Security & Compliance 30% (15), Cloud Technology & Services 34% (17) and Billing, Pricing & Support 12% (6). Questions are drawn at random from a larger bank and reshuffled each attempt. Multiple-response questions must be fully correct. Flag and revisit questions before submitting; at the end you get a pass/fail result, a per-domain breakdown and full explanations.",
+          "selection": {
+            "strategy": "planned",
+            "bucketLabel": "domain",
+            "plan": {
+              "D1": { "scored": 12, "unscored": 4 },
+              "D2": { "scored": 15, "unscored": 4 },
+              "D3": { "scored": 17, "unscored": 5 },
+              "D4": { "scored": 6, "unscored": 2 }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

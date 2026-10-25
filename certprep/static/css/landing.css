@@ -1,0 +1,33 @@
+.wrap { max-width: 960px; padding: 28px; }
+
+.group { margin: 22px 0 8px; }
+
+.ghead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+}
+.gname { font-weight: 800; font-size: 18px; margin: 0; }
+.gblurb { color: var(--muted); font-size: 13px; font-weight: 600; }
+
+.tcard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 12px 0;
+  transition: 0.12s;
+}
+.tcard:hover { border-color: var(--primary); background: var(--primary-wash); }
+.tt { font-weight: 700; font-size: 17px; }
+.go { color: var(--primary-hover); font-weight: 700; }
+.footnote { margin-top: 28px; font-size: 14px; }

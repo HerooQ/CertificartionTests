@@ -1,0 +1,88 @@
+<canvas id="celebrate-canvas" aria-hidden="true"></canvas>
+
+<main class="wrap">
+
+  <!-- INTRO -->
+  <section id="intro" class="card" aria-labelledby="exam-title">
+    <div><span class="brand-mark" aria-hidden="true"></span><span class="tag">$badge</span></div>
+    <h1 id="exam-title">$title</h1>
+    <p class="sub">$subtitle</p>
+    <div class="pills">$pills</div>
+    <h2>How this works</h2>
+    <p class="sub">$description</p>
+    <p class="note">This is a practice mock, not the real exam. Scores here are an approximation to help you gauge readiness.</p>
+    <form id="name-form" class="namebox" novalidate>
+      <label for="fname">First name</label>
+      <input id="fname" name="first" type="text" autocomplete="given-name" required>
+      <label for="sname">Surname</label>
+      <input id="sname" name="surname" type="text" autocomplete="family-name" required>
+      <p class="sub cam-notice">This is a proctored, full-screen exam; your camera is required. Review the rules before beginning.</p>
+      <div class="actions"><button type="submit" class="primary">Start exam →</button></div>
+    </form>
+  </section>
+
+  <!-- PROCTORING RULES -->
+  <section id="rules" class="card hidden" aria-labelledby="rules-title">
+    <div><span class="tag">PROCTORED EXAM RULES</span></div>
+    <h1 id="rules-title">Before you begin</h1>
+    <p class="sub">This attempt is proctored. Please read the rules: your webcam is on and the following are automatically detected and recorded against your result:</p>
+    <ul class="rules-list">
+      <li><span class="warn">Stay in full-screen</span> for the entire exam. Leaving full-screen is flagged.</li>
+      <li><span class="warn">Do not switch tabs, minimise, or open other apps or windows.</span> Doing so is flagged with the method used.</li>
+      <li><span class="warn">Keep your camera on</span> with your face visible throughout.</li>
+      <li>The timer keeps running the whole time; leaving the exam does <strong>not</strong> pause it.</li>
+      <li><span class="warn">Results will be posted on the group.</span></li>
+    </ul>
+    <label class="ack"><input type="checkbox" id="rules-ack">
+      <span>I understand these rules and agree that any of the above will be recorded and flagged as a possible cheating attempt.</span></label>
+    <div class="actions">
+      <button type="button" class="ghost" id="rules-back">← Back</button>
+      <button type="button" class="primary" id="rules-begin" disabled>Begin exam →</button>
+    </div>
+  </section>
+
+  <!-- EXAM -->
+  <section id="exam" class="hidden" aria-label="Exam">
+    <div class="bar noprint">
+      <div><strong id="qcount"></strong> <small class="k">· answered <span id="answered-count">0</span>/$shown</small></div>
+      <div class="timer" id="timer" role="timer" aria-live="off">$timer</div>
+    </div>
+    <div class="progress noprint"><span id="progress-bar"></span></div>
+    <div class="card question-card">
+      <div class="tag" id="qmeta"></div>
+      <h2 class="qtext" id="qtext"></h2>
+      <div id="options" role="group" aria-labelledby="qtext"></div>
+      <div class="nav">
+        <button type="button" class="ghost" id="prev-btn">← Previous</button>
+        <button type="button" class="flagbtn" id="flag-btn" aria-pressed="false">⚑ Flag for review</button>
+        <button type="button" class="primary" id="next-btn">Next →</button>
+      </div>
+    </div>
+    <div class="card question-card">
+      <div class="bar"><strong>Question navigator</strong>
+        <button type="button" class="danger" id="submit-btn">Review &amp; submit</button></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- RESULTS (rendered by results.js) -->
+  <section id="results" class="hidden" aria-live="polite"></section>
+</main>
+
+<div id="confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-msg">
+  <div class="confirm-box">
+    <p id="confirm-msg"></p>
+    <div class="row">
+      <button type="button" class="ghost" id="confirm-cancel">Cancel</button>
+      <button type="button" class="primary" id="confirm-ok">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Proctoring widgets (the camera feed stays in the browser; nothing is uploaded). -->
+<div id="proctor-cam" aria-hidden="true">
+  <video id="proctor-video" autoplay playsinline muted></video>
+  <div class="pc-bar"><span class="pc-dot"></span><span class="pc-rec">REC</span>
+    <span class="pc-name" id="proctor-name">Candidate</span></div>
+</div>
+<div id="proctor-toast" role="alert"></div>

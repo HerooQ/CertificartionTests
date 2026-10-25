@@ -1,0 +1,69 @@
+/* Webcam preview and violation toast shown during a proctored attempt. */
+
+#proctor-cam {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 9999;
+  width: 200px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+  display: none;
+}
+#proctor-cam.show { display: block; }
+#proctor-cam video {
+  display: block;
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  background: #000;
+  transform: scaleX(-1);
+}
+.pc-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  background: #1b1b1b;
+  color: #eee;
+  font-size: 11px;
+  font-weight: 600;
+}
+.pc-dot { width: 8px; height: 8px; border-radius: 50%; background: #e60000; animation: pc-blink 1.2s infinite; }
+.pc-rec { color: #ff6b6b; font-weight: 800; letter-spacing: 0.5px; }
+.pc-name { margin-left: auto; color: #bbb; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; }
+
+#proctor-toast {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: #8a1c10;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+  display: none;
+  max-width: 90vw;
+  text-align: center;
+}
+#proctor-toast.show { display: block; animation: pc-toast 0.25s ease; }
+
+@keyframes pc-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.15; } }
+@keyframes pc-toast {
+  from { opacity: 0; transform: translate(-50%, -8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-dot, #proctor-toast.show { animation: none; }
+}
+@media print {
+  #proctor-cam, #proctor-toast { display: none !important; }
+}

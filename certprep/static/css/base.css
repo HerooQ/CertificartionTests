@@ -1,0 +1,171 @@
+/* Design tokens, reset and primitives shared by every page.
+   Per-vendor look is selected with <body data-theme="microsoft|aws">. */
+
+:root,
+[data-theme="microsoft"] {
+  --ink: #242424;
+  --gray: #605e5c;
+  --muted: #8a8886;
+  --light: #f3f2f1;
+  --line: #e1dfdd;
+  --page: #faf9f8;
+  --font: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+
+  --primary: #0078d4;
+  --primary-hover: #106ebe;
+  --on-primary: #fff;
+  --primary-wash: #f5fbff;
+  --primary-tint: #eaf4fb;
+  --answered: #0078d4;
+  --flag: #ffb900;
+  --on-flag: #3a2f00;
+  --progress: #7fba00;
+  --danger: #f25022;
+  --danger-hover: #d9441b;
+  --meter: #0078d4;
+  --good: #7fba00;
+  --good-wash: #f2f9e7;
+  --bad: #f25022;
+  --bad-wash: #fdeceb;
+  --chip-ok-bg: #e3f0cf;
+  --chip-ok-fg: #3f5c00;
+  --chip-no-bg: #fdd8d3;
+  --chip-no-fg: #8a2410;
+  --pass-gradient: linear-gradient(135deg, #5a8f00, #7fba00);
+  --fail-gradient: linear-gradient(135deg, #c23b22, #f25022);
+  --note-bg: #f3f2f1;
+  --note-border: #e1dfdd;
+  --note-fg: #605e5c;
+  --low-time: #f25022;
+}
+
+[data-theme="aws"] {
+  --ink: #16191f;
+  --gray: #5f6b7a;
+  --muted: #8a94a3;
+  --light: #f2f4f7;
+  --line: #dfe3e8;
+  --page: #f6f7f9;
+  --font: "Amazon Ember", "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+
+  --primary: #ff9900;
+  --primary-hover: #ec7211;
+  --on-primary: #16191f;
+  --primary-wash: #fff8ef;
+  --primary-tint: #fff3e0;
+  --answered: #232f3e;
+  --flag: #ff9900;
+  --on-flag: #16191f;
+  --progress: #ff9900;
+  --danger: #232f3e;
+  --danger-hover: #31465f;
+  --meter: #007faa;
+  --good: #1a7f37;
+  --good-wash: #eaf6ec;
+  --bad: #b3261e;
+  --bad-wash: #fdeceb;
+  --chip-ok-bg: #d7ecdc;
+  --chip-ok-fg: #0f6b2f;
+  --chip-no-bg: #fdd8d3;
+  --chip-no-fg: #8a2410;
+  --pass-gradient: linear-gradient(135deg, #0f6b2f, #1a7f37);
+  --fail-gradient: linear-gradient(135deg, #8a2410, #c23b22);
+  --note-bg: #fff8ef;
+  --note-border: #ffe2b8;
+  --note-fg: #7a4b00;
+  --low-time: #b3261e;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--page);
+  line-height: 1.5;
+}
+
+.wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h1 { font-size: 26px; margin: 0.2em 0; }
+h2 { font-size: 19px; margin: 0.4em 0; }
+a { color: var(--primary-hover); }
+
+.sub { color: var(--gray); font-size: 15px; }
+.tag { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: 0.04em; }
+.hidden { display: none !important; }
+
+.card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Four-square mark used on the landing page. */
+.logo {
+  display: inline-grid;
+  grid-template-columns: 14px 14px;
+  gap: 3px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+.logo i { width: 14px; height: 14px; display: block; }
+.logo i:nth-child(1) { background: #f25022; }
+.logo i:nth-child(2) { background: #7fba00; }
+.logo i:nth-child(3) { background: #00a4ef; }
+.logo i:nth-child(4) { background: #ffb900; }
+
+button {
+  font-family: inherit;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.primary { background: var(--primary); color: var(--on-primary); }
+.primary:hover:not(:disabled) { background: var(--primary-hover); }
+.ghost { background: var(--light); color: var(--ink); }
+.ghost:hover { filter: brightness(0.96); }
+.danger { background: var(--danger); color: #fff; }
+.danger:hover { background: var(--danger-hover); }
+
+.btnlink {
+  display: inline-block;
+  text-decoration: none;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.btnlink:hover { background: var(--primary-hover); }
+.btnlink.ghostlink { background: var(--light); color: var(--ink); }
+.btnlink.ghostlink:hover { filter: brightness(0.96); }
+.btnlink.danger { background: #c0392b; color: #fff; }
+.btnlink.danger:hover { background: #a5301f; }
+
+@media print {
+  .noprint { display: none !important; }
+  body { background: #fff; }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "certprep",
+  "private": true,
+  "type": "module",
+  "description": "Front-end unit tests for the certification practice-exam platform (no runtime dependencies).",
+  "scripts": {
+    "test": "node --test tests/js/*.test.js"
+  },
+  "engines": {
+    "node": ">=21"
+  }
+}

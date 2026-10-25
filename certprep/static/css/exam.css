@@ -1,0 +1,189 @@
+/* Exam experience: intro, question view, navigator, confirm dialog and results. */
+
+.pills { margin: 14px 0; }
+.pill {
+  display: inline-block;
+  background: var(--light);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12.5px;
+  color: var(--gray);
+  margin: 4px 6px 0 0;
+  font-weight: 600;
+}
+
+.brand-mark {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--answered);
+  position: relative;
+}
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 5px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--primary);
+}
+
+.note {
+  background: var(--note-bg);
+  border: 1px solid var(--note-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--note-fg);
+  margin: 14px 0;
+}
+
+/* --- name form --- */
+.namebox { display: grid; gap: 12px; max-width: 440px; margin: 18px 0 4px; }
+.namebox label { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: -6px; }
+.namebox input {
+  font-family: inherit;
+  font-size: 15px;
+  padding: 11px 13px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+}
+.namebox input:focus { outline: none; border-color: var(--primary); background: var(--primary-wash); }
+.cam-notice { margin: 10px 0 0; color: #8a2410; font-weight: 600; }
+.actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* --- proctoring rules --- */
+.rules-list { margin: 10px 0 0; padding-left: 20px; }
+.rules-list li { margin: 7px 0; }
+.warn { color: #8a2410; font-weight: 700; }
+.ack { display: flex; align-items: flex-start; gap: 9px; margin: 18px 0 4px; font-weight: 600; }
+.ack input { margin-top: 3px; width: 17px; height: 17px; }
+
+/* --- exam chrome --- */
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 17px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+.timer.low { color: var(--low-time); border-color: var(--low-time); }
+.progress { height: 6px; background: var(--light); border-radius: 3px; overflow: hidden; margin: 8px 0 0; }
+.progress > span { display: block; height: 100%; background: var(--progress); width: 0; }
+.question-card { margin-top: 14px; }
+small.k { color: var(--muted); }
+
+.qtext { font-size: 18px; font-weight: 600; margin: 6px 0 18px; }
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: 0.12s;
+}
+.opt:hover { border-color: var(--primary); background: var(--primary-wash); }
+.opt.sel { border-color: var(--primary); background: var(--primary-tint); }
+.opt input { margin-top: 3px; transform: scale(1.15); accent-color: var(--primary-hover); }
+.opt.correct { border-color: var(--good); background: var(--good-wash); cursor: default; }
+.opt.wrong { border-color: var(--bad); background: var(--bad-wash); cursor: default; }
+
+.nav { display: flex; gap: 10px; justify-content: space-between; margin-top: 22px; flex-wrap: wrap; }
+.flagbtn {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--gray);
+}
+.flagbtn.on { background: var(--flag); border-color: var(--flag); color: var(--on-flag); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 7px; margin-top: 8px; }
+.gcell {
+  height: 38px;
+  padding: 0;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--gray);
+}
+.gcell.answered { background: var(--answered); color: #fff; border-color: var(--answered); }
+.gcell.flagged { background: var(--flag); color: var(--on-flag); border-color: var(--flag); }
+.gcell.current { outline: 3px solid var(--ink); outline-offset: 1px; }
+
+/* --- confirm dialog --- */
+#confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 25, 31, 0.55);
+  z-index: 9998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#confirm-overlay.show { display: flex; }
+.confirm-box { background: #fff; border-radius: 12px; padding: 22px 24px; max-width: 360px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+.confirm-box p { margin: 0 0 18px; font-size: 15px; }
+.confirm-box .row { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* --- results --- */
+.scorebig { font-size: 64px; font-weight: 800; line-height: 1; }
+.scorebig .of { font-size: 24px; font-weight: 600; }
+.result-banner { border-radius: 12px; padding: 22px 26px; color: #fff; margin-bottom: 20px; }
+.result-banner.pass { background: var(--pass-gradient); }
+.result-banner.fail { background: var(--fail-gradient); }
+.result-banner .verdict { font-size: 14px; font-weight: 700; letter-spacing: 2px; opacity: 0.9; }
+.result-banner .detail { margin-top: 6px; font-size: 15px; }
+.save-note { font-size: 13px; color: var(--muted); margin: 6px 0; }
+#results .card { margin-top: 14px; }
+
+.dbar { background: var(--light); border-radius: 6px; height: 22px; overflow: hidden; margin: 4px 0 12px; }
+.dbar > span {
+  display: block;
+  height: 100%;
+  background: var(--meter);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: right;
+  padding-right: 8px;
+  line-height: 22px;
+  white-space: nowrap;
+}
+.dlabel { font-size: 14px; font-weight: 600; margin-top: 10px; }
+
+.rev { border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 12px 0; }
+.rev.unscored { border-style: dashed; }
+.rev .rev-q { font-weight: 600; margin: 4px 0 8px; }
+.rev .expl { background: var(--light); border-radius: 8px; padding: 10px 12px; font-size: 14px; color: var(--gray); margin-top: 10px; }
+.badge { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 6px; padding: 2px 9px; margin-left: 8px; }
+.badge.ok { background: var(--chip-ok-bg); color: var(--chip-ok-fg); }
+.badge.no { background: var(--chip-no-bg); color: var(--chip-no-fg); }
+.badge.uns { background: #e5e9ef; color: #5f6b7a; }
+
+/* --- celebration overlay --- */
+#celebrate-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 9997; display: none; }
+
+/* --- exam lockdown: no text selection while a paper is in progress --- */
+body.exam-locked,
+body.exam-locked * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}

@@ -1,183 +1,159 @@
-# Certification Practice Tests — with results database & report
+# CertPrep — Proctored Certification Practice Exams
 
-This bundle turns your practice tests into a small system that
-records every student's **first name, surname and mark** into a database, and
-gives you a **report** of all results (viewable in the browser and exportable to CSV).
+[![CI](https://github.com/HerooQ/CertificartionTests/actions/workflows/ci.yml/badge.svg)](https://github.com/HerooQ/CertificartionTests/actions/workflows/ci.yml)
+![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
+![Dependencies: none](https://img.shields.io/badge/runtime%20dependencies-none-brightgreen)
+![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)
 
-It now covers **two certifications**, shown as separate groups on the landing page:
+A self-hosted exam platform for running **Microsoft SC-900** and **AWS Certified
+Cloud Practitioner (CLF-C02)** practice tests for a group of learners. It mirrors
+the real exam experience — timed papers, scaled scoring, unscored pretest items,
+webcam proctoring — and gives the trainer a live results report.
 
-- **Microsoft SC-900** — three practice tests (45-minute exams).
-- **AWS Cloud Computing (Certified Cloud Practitioner, CLF-C02)** — two practice
-  tests (90-minute exams) — see the "AWS tests" section below.
+It runs on the **Python standard library only** (no `pip install`) with a
+vanilla ES-module front end (no build step).
 
-No installs required — it uses only Python's standard library. You just need
-**Python 3.7+** (already on macOS/Linux; on Windows install from python.org).
+## Features
 
-## What's inside
+- **Realistic exam formats** — SC-900 (50 questions / 45 min) and CLF-C02
+  (65 questions / 90 min, of which 15 are unscored pretest items the candidate
+  cannot identify). Scaled score out of 1000, pass mark 700.
+- **Two paper-building strategies** — *balanced* (round-robin across course
+  modules) and *planned* (exact scored/unscored counts per module or by the real
+  exam-domain weightings). Every attempt is a fresh random paper with shuffled
+  questions and options.
+- **Server-enforced timer** — the deadline is stamped server-side once, so
+  reloading or reopening the tab cannot reset the clock.
+- **Proctoring signals** — mandatory webcam preview, rules acknowledgement, and
+  detection of full-screen exits, tab switches and window blur. Violations are
+  stored with the result. The camera feed never leaves the browser.
+- **Trainer report** — per-test breakdown, filtering, CSV export, manual entry,
+  Excel/CSV import (parsed without third-party libraries) and deletion.
+- **Per-vendor theming** via CSS design tokens (`data-theme`).
+
+## Quick start
+
+```bash
+python -m certprep serve          # http://localhost:8000
+```
+
+| URL | Purpose |
+| --- | --- |
+| `/` | Choose a practice test |
+| `/exams/<slug>` | Take an exam, e.g. `/exams/sc900-practice-2` |
+| `/report` | Trainer report (filter, export, import, delete) |
+
+Browsers only allow the camera on `localhost` or HTTPS. To let learners on other
+machines take an exam, expose the server over HTTPS (for example with an
+[ngrok](https://ngrok.com) tunnel to port 8000).
+
+Other commands:
+
+```bash
+python -m certprep serve --port 9000   # custom port
+python -m certprep validate            # lint the catalog and every question bank
+```
+
+### Configuration
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `CERTPREP_HOST` | `0.0.0.0` | Interface to bind |
+| `CERTPREP_PORT` | `8000` | Port |
+| `CERTPREP_DB` | `./results.db` | SQLite results database |
+| `CERTPREP_DATA_DIR` | `./data` | Catalog and question banks |
+
+## Project layout
 
 ```
-sc900/
-├── server.py        ← the app (serves tests + saves results + report)
-├── results.db       ← SQLite database (starts empty; created automatically)
-├── README.md        ← this file
-├── tests/
-│   ├── test1.html      ← SC-900 Practice Test 1 (Modules 1–6)
-│   ├── test2.html      ← SC-900 Practice Test 2 (Modules 1–12)
-│   ├── test3.html      ← SC-900 Practice Test 3 (Modules 1–18)
-│   ├── aws-test1.html  ← AWS Practice Test 1 (course Modules 5–8)
-│   └── aws-final.html  ← AWS Certified Cloud Practitioner — Final Exam (CLF-C02)
-└── transform.py        ← (reference only) the script used to add name capture
+certprep/
+  cli.py          command-line entry point (serve / validate)
+  server.py       HTTP routing, request validation, security headers
+  catalog.py      exam groups, selection rules and durations (data/catalog.json)
+  questions.py    question-bank loading and validation
+  database.py     SQLite repository: results + server-side attempt timers
+  scoring.py      scaled-score policy shared by every code path
+  importer.py     spreadsheet import (header detection, name splitting)
+  spreadsheet.py  dependency-free .xlsx / .csv reader
+  reports.py      aggregation and CSV export
+  views.py        template rendering (all output escaped)
+  templates/      HTML templates
+  static/
+    css/          design tokens, exam, report, proctoring styles
+    js/exam/      paper.js, scoring.js, clock.js, proctor.js, view.js, ...
+    js/report.js
+data/
+  catalog.json    exams, durations, themes, selection rules
+  questions/      one JSON bank per exam
+tests/            Python unit + end-to-end tests, and tests/js for the front end
 ```
 
-## How to run it
+Design notes:
 
-1. Open a terminal / command prompt in this `sc900` folder.
-2. Run:
+- **Content is data.** Exams and questions are JSON; adding an exam never
+  requires touching code. `python -m certprep validate` checks every bank
+  (duplicate options, bad answer indexes, buckets too small for the plan…) and
+  runs in CI.
+- **Pure core, thin shell.** Paper assembly (`paper.js`) and marking
+  (`scoring.js`) are pure functions with an injectable RNG; the DOM layer is
+  separate. The server recomputes score, percentage and pass/fail from
+  `correct/total` rather than trusting client-supplied values.
+- **Safe by default.** Strict Content-Security-Policy (no inline scripts or
+  styles), `textContent`-only rendering, escaped templates, request-size limits,
+  path-traversal-safe static serving and parameterised SQL.
+- **Backwards compatible.** The SQLite schema upgrades in place, and the old
+  `/tests/testN.html` URLs redirect to the new routes.
 
-   ```
-   python3 server.py
-   ```
-   (On Windows, if `python3` isn't found, use `python server.py`.)
+## Adding or editing questions
 
-3. You'll see:
+Each bank is a JSON array in `data/questions/<exam-slug>.json`:
 
-   ```
-   Open:     http://localhost:8000/
-   Report:   http://localhost:8000/report
-   ```
+```json
+{
+  "id": "sc900-practice-2-001",
+  "bucket": "M3",
+  "domain": "Concepts (security, compliance & identity)",
+  "question": "Which technology protects data in transit?",
+  "options": ["BitLocker", "TLS/HTTPS", "A hash", "A banned-password list"],
+  "answer": [1],
+  "explanation": "TLS/HTTPS encrypts data moving across the network."
+}
+```
 
-4. Open **http://localhost:8000/** in a browser.
+- `answer` is a list of zero-based option indexes; more than one makes the item
+  multiple-response (must be answered exactly).
+- `bucket` is what the selection rules balance on (`M5`, `D2`, …); `domain` is
+  the label shown in the per-domain breakdown.
 
-## How students take a test
+Then run `python -m certprep validate`.
 
-- From the landing page they pick a test.
-- On the intro screen they **enter their first name and surname** (both required),
-  then click *Start exam*.
-- When they submit, their result is saved automatically. They'll see
-  "Result saved to the database ✓" on the results screen.
+To add a whole exam, append an entry to `data/catalog.json` and drop its bank
+into `data/questions/`.
 
-> Students on **other computers** on the same network can reach it too — give them
-> `http://YOUR-IP:8000/` (find your machine's IP with `ipconfig` on Windows or
-> `ifconfig`/`ip addr` on macOS/Linux). They must go through this address, not by
-> opening the HTML file directly, for their mark to be recorded.
+## Testing
 
-## The report (for you)
+```bash
+python -m unittest discover -s tests -t .   # 39 Python tests (unit + HTTP end-to-end)
+npm test                                    # front-end unit tests (Node 21+, no dependencies)
+```
 
-Go to **http://localhost:8000/report**. It shows:
+The end-to-end tests start the real server on an ephemeral port with a
+throw-away database.
 
-- Summary cards: total attempts, average scaled score, average % correct, pass
-  rate, and **number flagged for cheating**.
-- A per-test breakdown (attempts, average score, pass rate, flagged count for each test).
-- A full table of every attempt: date/time, student, test, correct/total, scaled
-  score, percent, PASS/FAIL, and a **Proctoring** column (either "Clean" or the
-  cheating flag with the method used).
-- A **"Filter by test"** dropdown so you can view just one test's attempts instead
-  of scrolling through all of them.
-- **Export CSV** button (respects the current test filter, and includes the
-  Comments column) and a **Print** button.
+## Limitations
 
-## Proctoring & anti-cheating
+- Scoring happens in the browser and the question bank (including correct
+  answers) is delivered to the client. That is fine for friendly practice runs
+  but not for high-stakes testing; a hardened version would grade server-side.
+- Proctoring is a deterrent, not tamper-proof invigilation — a determined user
+  could disable JavaScript or use a second device.
+- Results are identified by first name + surname; there is no authentication.
 
-Every attempt runs in a lightweight "proctored" mode, purely to simulate the real
-exam experience:
+## Privacy
 
-- **Webcam required.** After entering their name and clicking *Start exam*, the
-  student is asked to allow their camera. The exam will not start until they do —
-  the live feed then sits in the top-right with a red "REC" indicator and their
-  name. (The feed stays in their browser; nothing is uploaded or recorded.)
-- **Rules screen.** Between the name entry and the test, a rules page explains the
-  conditions and requires the student to tick "I understand" before the *Begin
-  exam* button unlocks. Fullscreen is entered from that button click.
-- **Cheating detection.** During the exam the browser watches for, and flags, the
-  student:
-  - **exiting full-screen**,
-  - **switching tabs or minimising the window**, and
-  - **leaving the exam window** (opening another app or window).
+`results.db` holds learners' names and marks. Treat it as personal data: keep it
+out of public repositories and back it up like any other data store.
 
-  Each time, a warning banner appears on screen ("… — this has been flagged"), and
-  the behaviour is recorded. When they submit, the flags are saved to the database
-  in a **`comments`** column (e.g. *"CHEATING FLAGGED — Exited full-screen (2×);
-  Switched tab or minimised the window"*). Clean attempts store an empty comment.
+## License
 
-> **Important:** because the camera is mandatory and browsers only allow it over a
-> secure connection, everyone must use the **https:// ngrok link**. A plain
-> `http://` LAN address will block the camera (and therefore the exam start).
->
-> Note that this is a browser-based deterrent, not tamper-proof invigilation — a
-> determined user could disable JavaScript or use another device. It's designed to
-> make the practice feel like the real thing and to surface obvious slips.
-
-## Where the data lives
-
-Everything is stored in `results.db` (SQLite). It persists between runs. To start
-fresh, stop the server and delete `results.db` — a new empty one is created on the
-next launch. You can also open `results.db` in any SQLite tool (e.g. DB Browser for
-SQLite) if you want to query it directly. The table is `results`.
-
-## The AWS tests (Cloud Practitioner / CLF-C02)
-
-The **AWS Cloud Computing** group has two tests. Both follow the **real CLF-C02
-format**, which differs from the SC-900 tests:
-
-- **65 questions in 90 minutes** (the timer is enforced server-side, exactly like
-  the SC-900 tests).
-- **50 of the 65 questions are scored; 15 are unscored "pretest" questions.**
-  Students can't tell which is which — just like the real exam. Only the 50 scored
-  questions count toward the mark.
-- Score is reported as a **scaled score out of 1000, pass = 700**. As with the
-  SC-900 mocks, all scored questions are weighted equally (so 35 of 50 correct =
-  700). Multiple-response questions must be fully correct to earn the point.
-
-**AWS Practice Test 1 (Modules 5–8)** covers the four course modules from your
-slides, and the 50 scored questions are spread evenly across them:
-
-| Module | Topic                              | Scored | Unscored |
-|--------|------------------------------------|--------|----------|
-| 5      | Compute, Storage & Databases       | 13     | 4        |
-| 6      | Integration & DevOps               | 12     | 4        |
-| 7      | AI/ML, Analytics & Migration       | 13     | 4        |
-| 8      | Billing, Pricing & Support         | 12     | 3        |
-
-**AWS Final Exam (CLF-C02)** covers the whole exam, with the 50 scored questions
-**distributed across the four official domains by their real weightings** — so the
-practice mix matches what the actual exam emphasises:
-
-| Domain | Name                          | Weight | Scored | Unscored |
-|--------|-------------------------------|--------|--------|----------|
-| 1      | Cloud Concepts                | 24%    | 12     | 4        |
-| 2      | Security and Compliance       | 30%    | 15     | 4        |
-| 3      | Cloud Technology and Services | 34%    | 17     | 5        |
-| 4      | Billing, Pricing, and Support | 12%    | 6      | 2        |
-
-Each attempt draws a fresh random paper from a larger bank and reshuffles the
-question and answer order. The results screen shows a **per-module** (Test 1) or
-**per-domain** (Final) breakdown so students can see exactly where to revise.
-
-### Adding or editing AWS questions
-
-The AWS question banks live in the build files (`bank_modules.py`, `bank_final.py`)
-and are compiled into the two HTML files by `build_aws.py`. To add questions, add
-entries to the relevant `QUESTIONS` list (keep the `"b"` bucket key — e.g. `"M5"`
-or `"D2"` — so the balancing works) and re-run `python3 build_aws.py`. The script
-validates counts and answer indices before writing the HTML. You can also edit the
-`QUESTIONS_ALL` array directly inside `tests/aws-test1.html` / `tests/aws-final.html`
-if you prefer.
-
-## Notes on the SC-900 question pools
-
-Each SC-900 test draws a **balanced random selection of 50 questions** from a larger
-bank, then shuffles both the question order and the answer options each attempt:
-
-| Test   | Question bank | Shown per attempt |
-|--------|---------------|-------------------|
-| Test 1 | 54 questions  | 50 (only 4 rotate out — little variety) |
-| Test 2 | 92 questions  | 50 (good variety) |
-| Test 3 | 130 questions | 50 (good variety) |
-
-So it is a genuine pool, not a fixed 50 — but Test 1's bank is only slightly larger
-than 50, so it feels nearly identical each attempt. Add more questions to Test 1's
-`QUESTIONS_ALL` array if you want more variation there.
-
-## Changing the port
-
-If port 8000 is busy, open `server.py` and change `PORT = 8000` near the top.
+[MIT](LICENSE)
