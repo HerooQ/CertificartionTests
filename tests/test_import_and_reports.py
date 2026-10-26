@@ -57,7 +57,8 @@ class ImportTests(unittest.TestCase):
         self.assertFalse(summary.ok)
 
     def test_xlsx_import(self):
-        xlsx = minimal_xlsx([["Test", "First name", "Surname", "Correct", "Total"], ["Exam", "Grace", "Hopper", "50", "50"]])
+        header = ["Test", "First name", "Surname", "Correct", "Total"]
+        xlsx = minimal_xlsx([header, ["Exam", "Grace", "Hopper", "50", "50"]])
         summary = import_rows(parse_spreadsheet(xlsx), self.db, POLICY)
         self.assertEqual(summary.imported, 1)
         self.assertEqual(self.db.list_results()[0].score, 1000)

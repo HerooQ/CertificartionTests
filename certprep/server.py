@@ -143,7 +143,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             raise HttpError(HTTPStatus.NOT_FOUND, "Not found")
         except HttpError as err:
             self._error(err)
-        except Exception:  # noqa: BLE001 - last-resort guard; details go to the log
+        except Exception:
             log.exception("Unhandled error serving %s", self.path)
             self._error(HttpError(HTTPStatus.INTERNAL_SERVER_ERROR, "Internal server error"))
 
@@ -343,7 +343,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         self._json(summary.to_dict(), status)
 
     # -- logging ------------------------------------------------------------
-    def log_message(self, format: str, *args) -> None:  # noqa: A002 - stdlib signature
+    def log_message(self, format: str, *args) -> None:
         log.info("%s - %s", self.address_string(), format % args)
 
 

@@ -15,7 +15,6 @@ from pathlib import Path
 from certprep.config import Settings
 from certprep.server import Application, create_server
 
-
 Response = namedtuple("Response", "status headers body")
 
 
@@ -58,7 +57,8 @@ class ServerTests(unittest.TestCase):
         return response.status, json.loads(response.body)
 
     def submission(self, **overrides):
-        return {"test": self.exam.name, "first_name": "Ada", "surname": "Lovelace", "correct": 40, "total": 50, **overrides}
+        base = {"test": self.exam.name, "first_name": "Ada", "surname": "Lovelace", "correct": 40, "total": 50}
+        return {**base, **overrides}
 
     # -- pages -----------------------------------------------------------
     def test_pages_render(self):

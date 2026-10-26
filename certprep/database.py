@@ -1,4 +1,4 @@
-"""SQLite persistence for exam results and server-side attempt timers."""
+﻿"""SQLite persistence for exam results and server-side attempt timers."""
 
 from __future__ import annotations
 
@@ -190,7 +190,7 @@ class Database:
                        VALUES (?,?,?,?,?,?,0)""",
                     (test, first_name, surname, _now_iso(), ends_at, duration),
                 )
-        remaining = max(0, int(round(ends_at - now)))
+        remaining = max(0, round(ends_at - now))
         return AttemptClock(remaining=remaining, duration=duration)
 
     def close_attempt(self, test: str, first_name: str, surname: str) -> None:

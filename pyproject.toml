@@ -1,4 +1,4 @@
-[build-system]
+﻿[build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
@@ -21,7 +21,7 @@ include = ["certprep*"]
 certprep = ["static/**/*", "templates/**/*"]
 
 [tool.ruff]
-line-length = 110
+line-length = 120
 target-version = "py310"
 
 [tool.ruff.lint]

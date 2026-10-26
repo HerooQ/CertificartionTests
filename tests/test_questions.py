@@ -12,23 +12,24 @@ class BundledContentTests(unittest.TestCase):
         self.assertEqual(problems, [])
 
 
-class QuestionValidationTests(unittest.TestCase):
-    good = {
-        "id": "q1", "bucket": "M1", "domain": "D", "question": "Q?",
-        "options": ["a", "b", "c"], "answer": [1], "explanation": "because",
-    }  # fmt: skip
+GOOD_QUESTION = {
+    "id": "q1", "bucket": "M1", "domain": "D", "question": "Q?",
+    "options": ["a", "b", "c"], "answer": [1], "explanation": "because",
+}  # fmt: skip
 
+
+class QuestionValidationTests(unittest.TestCase):
     def test_valid_question(self):
-        self.assertEqual(validate_question(self.good), [])
+        self.assertEqual(validate_question(GOOD_QUESTION), [])
 
     def test_detects_problems(self):
         cases = {
-            "answer index out of range": {**self.good, "answer": [5]},
-            "duplicate options": {**self.good, "options": ["a", "a", "c"]},
-            "no correct answer": {**self.good, "answer": []},
-            "every option is marked correct": {**self.good, "answer": [0, 1, 2]},
-            "empty explanation": {**self.good, "explanation": " "},
-            "missing 'id'": {k: v for k, v in self.good.items() if k != "id"},
+            "answer index out of range": {**GOOD_QUESTION, "answer": [5]},
+            "duplicate options": {**GOOD_QUESTION, "options": ["a", "a", "c"]},
+            "no correct answer": {**GOOD_QUESTION, "answer": []},
+            "every option is marked correct": {**GOOD_QUESTION, "answer": [0, 1, 2]},
+            "empty explanation": {**GOOD_QUESTION, "explanation": " "},
+            "missing 'id'": {k: v for k, v in GOOD_QUESTION.items() if k != "id"},
         }
         for expected, question in cases.items():
             with self.subTest(expected):
