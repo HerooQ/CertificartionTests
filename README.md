@@ -1,14 +1,14 @@
 # CertPrep — Proctored Certification Practice Exams
 
-[![CI](https://github.com/HerooQ/CertificartionTests/actions/workflows/ci.yml/badge.svg)](https://github.com/HerooQ/CertificartionTests/actions/workflows/ci.yml)
+[![CI](https://github.com/Quban301/CertificartionTests/actions/workflows/ci.yml/badge.svg)](https://github.com/Quban301/CertificartionTests/actions/workflows/ci.yml)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Dependencies: none](https://img.shields.io/badge/runtime%20dependencies-none-brightgreen)
 ![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)
 
 A self-hosted exam platform for running **Microsoft SC-900** and **AWS Certified
 Cloud Practitioner (CLF-C02)** practice tests for a group of learners. It mirrors
-the real exam experience — timed papers, scaled scoring, unscored pretest items,
-webcam proctoring — and gives the trainer a live results report.
+the real exam experience; timed papers, scaled scoring, unscored pretest items,
+webcam proctoring and gives the trainer a live results report.
 
 It runs on the **Python standard library only** (no `pip install`) with a
 vanilla ES-module front end (no build step).
@@ -18,16 +18,16 @@ vanilla ES-module front end (no build step).
 - **Realistic exam formats** — SC-900 (50 questions / 45 min) and CLF-C02
   (65 questions / 90 min, of which 15 are unscored pretest items the candidate
   cannot identify). Scaled score out of 1000, pass mark 700.
-- **Two paper-building strategies** — *balanced* (round-robin across course
+- **Two paper-building strategies** - *balanced* (round-robin across course
   modules) and *planned* (exact scored/unscored counts per module or by the real
   exam-domain weightings). Every attempt is a fresh random paper with shuffled
   questions and options.
-- **Server-enforced timer** — the deadline is stamped server-side once, so
+- **Server-enforced timer** - the deadline is stamped server-side once, so
   reloading or reopening the tab cannot reset the clock.
-- **Proctoring signals** — mandatory webcam preview, rules acknowledgement, and
+- **Proctoring signals** - mandatory webcam preview, rules acknowledgement, and
   detection of full-screen exits, tab switches and window blur. Violations are
   stored with the result. The camera feed never leaves the browser.
-- **Trainer report** — per-test breakdown, filtering, CSV export, manual entry,
+- **Trainer report** - per-test breakdown, filtering, CSV export, manual entry,
   Excel/CSV import (parsed without third-party libraries) and deletion.
 - **Per-vendor theming** via CSS design tokens (`data-theme`).
 
