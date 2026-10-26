@@ -1,6 +1,6 @@
 # CertPrep — Proctored Certification Practice Exams
 
-[![CI](https://github.com/Quban301/CertificartionTests/actions/workflows/ci.yml/badge.svg)](https://github.com/Quban301/CertificartionTests/actions/workflows/ci.yml)
+[![CI](https://github.com/HerooQ/CertificartionTests/actions/workflows/ci.yml/badge.svg)](https://github.com/HerooQ/CertificartionTests/actions/workflows/ci.yml)
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Dependencies: none](https://img.shields.io/badge/runtime%20dependencies-none-brightgreen)
 ![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)
